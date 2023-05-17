@@ -1,0 +1,41 @@
+$purple: #9DA8FB;
+$yellow: #FBD574;
+$green: #7BE0AD;
+$red: #E45E5E;
+$orange: #F4A77B;
+$blue: #5AA9E6;
+$white: #FDFDFD;
+$primary-color: #3c486b;
+$secondary-color: #667bb7;
+
+@mixin H1 {
+    font-family: 'Rubik';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 57px;   
+}
+
+@mixin H1-mob {
+    font-family: 'Rubik';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 38px;   
+}
+
+@mixin H2 {
+    font-family: 'Rubik';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 38px;
+}
+
+@mixin H2-mob {
+    font-family: 'Rubik';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;   
+}
