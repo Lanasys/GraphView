@@ -7,19 +7,26 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { GraphsComponent } from './graphs/graphs.component';
+import { AboutComponent } from './about/about.component';
+import { LicenseComponent } from './license/license.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     GraphsComponent,
+    AboutComponent,
+    LicenseComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', component: GraphsComponent, pathMatch: 'full' }
+      { path: '', component: GraphsComponent, pathMatch: 'full' },
+      { path: 'about', component: AboutComponent, pathMatch: 'full' },
+      { path: 'license', component: LicenseComponent, pathMatch: 'full' }
+
     ])
   ],
   providers: [],
