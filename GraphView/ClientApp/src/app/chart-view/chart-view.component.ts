@@ -34,7 +34,17 @@ export class ChartViewComponent {
       ],
       chart: {
         height: 350,
-        type: "line"
+        type: "line",
+        toolbar: {
+          tools: {
+              selection: false,
+            zoom: false,
+            zoomin: false,
+            zoomout: false,
+            pan: false,
+            reset: false
+          }
+        }        
       },
       title: {
         text: "My First Angular Chart"
@@ -43,5 +53,16 @@ export class ChartViewComponent {
         categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"]
       }
     };
+  }
+
+  changeChartType(type: string) {
+    console.log(this)
+    this.chart.updateOptions(
+      {
+        chart: {
+          type: type
+        }
+      }
+    )
   }
 }
