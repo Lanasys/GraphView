@@ -9,6 +9,8 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { GraphsComponent } from './graphs/graphs.component';
 import { AboutComponent } from './about/about.component';
 import { LicenseComponent } from './license/license.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { ChartViewComponent } from './chart-view/chart-view.component';
 
 @NgModule({
   declarations: [
@@ -16,12 +18,14 @@ import { LicenseComponent } from './license/license.component';
     NavMenuComponent,
     GraphsComponent,
     AboutComponent,
-    LicenseComponent
+    LicenseComponent,
+    ChartViewComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    NgApexchartsModule,
     RouterModule.forRoot([
       { path: '', component: GraphsComponent, pathMatch: 'full' },
       { path: 'about', component: AboutComponent, pathMatch: 'full' },
