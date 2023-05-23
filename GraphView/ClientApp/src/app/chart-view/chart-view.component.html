@@ -8,4 +8,5 @@
   <button (click)="changeChartType('bar')">Switch to Bar Chart</button>
   <button (click)="changeChartType('line')">Switch to line Chart</button>
   <button (click)="changeChartType('heatmap')">Switch to heatmap Chart</button>
+  <input #fileImportInput type="file" name="name" (change)="fileChangeListener($event)"  />
 </div>

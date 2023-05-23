@@ -11,6 +11,7 @@ import { AboutComponent } from './about/about.component';
 import { LicenseComponent } from './license/license.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ChartViewComponent } from './chart-view/chart-view.component';
+import { NgxCsvParserModule } from 'ngx-csv-parser';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { ChartViewComponent } from './chart-view/chart-view.component';
     HttpClientModule,
     FormsModule,
     NgApexchartsModule,
+    NgxCsvParserModule,
     RouterModule.forRoot([
       { path: '', component: GraphsComponent, pathMatch: 'full' },
       { path: 'about', component: AboutComponent, pathMatch: 'full' },
