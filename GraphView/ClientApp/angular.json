@@ -33,10 +33,13 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/variables.scss",
+              "src/bootstrap/scss/bootstrap.scss"
             ],
             "scripts": [
-              "node_modules/apexcharts/dist/apexcharts.min.js"
+              "node_modules/apexcharts/dist/apexcharts.min.js",
+              "src/bootstrap/js/bootstrap.js"
             ]
           },
           "configurations": {
