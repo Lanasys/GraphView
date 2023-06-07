@@ -73,6 +73,8 @@ export class GraphsComponent {
     }
   };
 
+chartTypesArray = Object.keys(this.chartTypes);
+
 
   constructor(private ngxCsvParser: NgxCsvParser) {
     this.chartOptions = {
@@ -125,7 +127,7 @@ export class GraphsComponent {
           let dataset: DataSet | null = ProcessData(result, files[0].name);
           if (dataset != null) {
             this.project.datasets.push(dataset);
-            console.log(this.project.datasets[0]);
+            console.log(this.project);
           }
           
         },

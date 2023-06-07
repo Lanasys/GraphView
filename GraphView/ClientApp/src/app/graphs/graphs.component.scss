@@ -8,6 +8,9 @@
   margin-bottom: 10px;
 }
 
+.chart-wrapper {
+}
+
 .options-group {
   padding: 10px;
   border: 1px solid $primary-color;
@@ -19,6 +22,16 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
+
+    & svg {
+      transform: rotate(0deg);
+      transition: 0.1s all linear;
+    }
+
+    &:not(.collapsed) svg {
+      transform: rotate(180deg);
+    }
 
     h3 {
       @include H3;
@@ -26,19 +39,6 @@
 
       span {
         font-weight: 400;
-      }
-    }
-
-    a {
-      cursor: pointer;
-      color: $primary-color;
-
-      &:hover {
-        color: $secondary-color;
-      }
-
-      &:visited, &:focus {
-        color: $primary-color;
       }
     }
   }
@@ -57,6 +57,7 @@
       border: 1px solid $primary-color;
       transition: 0.1s all linear;
       position: relative;
+      cursor: pointer;
 
       &:checked {
         border: 8px solid $secondary-color;
