@@ -2,7 +2,7 @@ import { DataSet } from './models';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import { first } from 'rxjs';
 
-function ProcessData(data: any, fileName: string) {
+export function ProcessData(data: any, fileName: string) {
   //тут перевірка на версію
 
   let dataSet = new DataSet();

@@ -1,6 +1,6 @@
 export class Project {
   name: string;
-  datasets: DataSet[];
+  datasets: DataSet[] = [];
 }
 
 export class DataSet {
@@ -18,45 +18,45 @@ export class DataSet {
   gpuName: string; //GPU
   cpuName: string; //CPU
 
-  time: number[]; //TimeInSeconds
-  frameTimePresent: number[]; //MsBetweenPresents
-  frameTimeDisplayChange: number[]; //MsBetweenDisplayChange
+  time: number[] = []; //TimeInSeconds
+  frameTimePresent: number[] = []; //MsBetweenPresents
+  frameTimeDisplayChange: number[] = []; //MsBetweenDisplayChange
 
-  gpuClock: number[]; //GPU#Clk (MHz)
+  gpuClock: number[] = []; //GPU#Clk (MHz)
   gpuClockAvg: number;
-  gpuMemoryClock: number[]; //GPU#MemClock (MHz)
+  gpuMemoryClock: number[] = []; //GPU#MemClock (MHz)
   gpuMemoryClockAvg: number;
-  gpuUtilization: number[]; //GPU#Util (%)
+  gpuUtilization: number[] = []; //GPU#Util (%)
   gpuUtilizationAvg: number;
-  gpuTemperature: number[]; //GPU#Temp (C)
+  gpuTemperature: number[] = []; //GPU#Temp (C)
   gpuTemperatureAvg: number;
   gpuTemperatureMax: number;
   gpuTemperatureMin: number;
-  gpuPower: number[]; //PCAT Power Total, GPUOnlyPwr(W) (API), NV Pwr(W) (API), AMDPwr(W) (API)
+  gpuPower: number[] = []; //PCAT Power Total, GPUOnlyPwr(W) (API), NV Pwr(W) (API), AMDPwr(W) (API)
   gpuPowerAvg: number;
   gpuPowerMax: number;
   gpuPowerMin: number;
 
-  cpuClock: number[]; //CPUClk (MHz)
+  cpuClock: number[] = []; //CPUClk (MHz)
   cpuClockAvg: number;
-  cpuUtilization: number[]; //CPUUtil (%)
+  cpuUtilization: number[] = []; //CPUUtil (%)
   cpuUtilizationAvg: number;
-  cpuTemperature: number[]; //CPU Package Temp (C)
+  cpuTemperature: number[] = []; //CPU Package Temp (C)
   cpuTemperatureAvg: number;
   cpuTemperatureMax: number;
   cpuTemperatureMin: number;
-  cpuPower: number[]; //CPU Package Power (W)
+  cpuPower: number[] = []; //CPU Package Power (W)
   cpuPowerAvg: number;
   cpuPowerMax: number;
   cpuPowerMin: number;
-  cpuTDP: number[]; //CPU TDP (W)
+  cpuTDP: number[] = []; //CPU TDP (W)
   cpuTDPMax: number;
   cpuTDPMin: number;
-  cpuUtilizationPerCore: number[][]; //CPUCoreUtil%[##]
+  cpuUtilizationPerCore: number[][] = []; //CPUCoreUtil%[##]
 
-  batteryCapacityWattHours: number[]; //Current Battery Capacity (Wh)
-  batteryPercentRemaining: number[]; //Battery Percentage
-  batteryDrainRate: number[]; //Battery Drain Rate (W)
+  batteryCapacityWattHours: number[] = []; //Current Battery Capacity (Wh)
+  batteryPercentRemaining: number[] = []; //Battery Percentage
+  batteryDrainRate: number[] = []; //Battery Drain Rate (W)
   batteryDrainRateAvg: number;
   batteryDrainRateMax: number;
   batteryDrainRateMin: number;
