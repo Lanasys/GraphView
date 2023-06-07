@@ -8,7 +8,43 @@
     </div>
   </div>
   <div class="col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-3 col-xxl-2">
-    <input type="file" name="name" (change)="fileChangeListener($event)" />
+    <div class="row">
+      <button id="#btnDraw" type="button">Draw</button>
+    </div>
+    <div class="row">
+      <input type="file" name="name" (change)="fileChangeListener($event)" />
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="options-group">
+          <p>Data: <span id="dataLabel">from API</span></p>
+          <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseData" aria-expanded="false" aria-controls="collapseData">
+            Open
+          </button>
+          <div class="collapse" id="collapseData">
+            <input type="radio" name="data" id="dataAPI" />
+            <label for="dataAPI">API</label>
+            <input type="radio" name="data" id="dataDisplay" />
+            <label for="dataDisplay">Display</label>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="options-group">
+          <p>Type of chart: <span id="dataLabel">FrameTime</span></p>
+          <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGraphType" aria-expanded="false" aria-controls="collapseGraphType">
+            Open
+          </button>
+          <div class="collapse" id="collapseGraphType">
+            <input type="radio" name="graphType" id="graphTypeFrameTime" />
+            <label for="graphTypeFrameTime">FrameTime</label>
+            <input type="radio" name="graphType" id="graphTypeFPS" />
+            <label for="graphTypeFPS">FPS</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
   <div></div>
 </div>
