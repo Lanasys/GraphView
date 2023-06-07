@@ -17,29 +17,41 @@
     <div class="row">
       <div class="col-12">
         <div class="options-group">
-          <p>Data: <span id="dataLabel">from API</span></p>
-          <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseData" aria-expanded="false" aria-controls="collapseData">
-            Open
-          </button>
+          <div class="options-group-title">
+            <h3>Data based on: <span id="dataLabel">Time between calls</span></h3>
+            <a data-bs-toggle="collapse" data-bs-target="#collapseData" aria-expanded="false" aria-controls="collapseData">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6l1.41-1.42Z" /></svg>
+            </a>
+          </div>
           <div class="collapse" id="collapseData">
-            <input type="radio" name="data" id="dataAPI" />
-            <label for="dataAPI">API</label>
-            <input type="radio" name="data" id="dataDisplay" />
-            <label for="dataDisplay">Display</label>
+            <div class="options-point">
+              <input type="radio" name="data" id="dataAPI" checked />
+              <label for="dataAPI">Time between calls</label>
+            </div>
+            <div class="options-point">
+              <input type="radio" name="data" id="dataDisplay" />
+              <label for="dataDisplay">Time between showing frames on the display</label>
+            </div>
           </div>
         </div>
       </div>
       <div class="col-12">
         <div class="options-group">
-          <p>Type of chart: <span id="dataLabel">FrameTime</span></p>
-          <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGraphType" aria-expanded="false" aria-controls="collapseGraphType">
-            Open
-          </button>
+          <div class="options-group-title">
+            <h3>Type of chart: <span id="dataLabel">FrameTime</span></h3>
+            <a data-bs-toggle="collapse" data-bs-target="#collapseGraphType" aria-expanded="false" aria-controls="collapseGraphType">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6l1.41-1.42Z" /></svg>
+            </a>
+          </div>
           <div class="collapse" id="collapseGraphType">
-            <input type="radio" name="graphType" id="graphTypeFrameTime" />
-            <label for="graphTypeFrameTime">FrameTime</label>
-            <input type="radio" name="graphType" id="graphTypeFPS" />
-            <label for="graphTypeFPS">FPS</label>
+            <div class="options-point">
+              <input type="radio" name="graphType" id="graphTypeFrameTime" />
+              <label for="graphTypeFrameTime">FrameTime</label>
+            </div>
+            <div class="options-point">
+              <input type="radio" name="graphType" id="graphTypeFPS" />
+              <label for="graphTypeFPS">FPS</label>
+            </div>
           </div>
         </div>
       </div>

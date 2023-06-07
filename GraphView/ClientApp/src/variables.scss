@@ -10,33 +10,49 @@ $secondary-color: #667bb7;
 $body-color: #b4c5e3;
 
 @mixin H1 {
-    font-family: 'Rubik';
-    font-style: normal;
-    font-weight: 600;
-    font-size: 48px;
-    line-height: 57px;   
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 48px;
+  line-height: 57px;
 }
 
 @mixin H1-mob {
-    font-family: 'Rubik';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 32px;
-    line-height: 38px;   
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 38px;
 }
 
 @mixin H2 {
-    font-family: 'Rubik';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 32px;
-    line-height: 38px;
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 38px;
 }
 
 @mixin H2-mob {
-    font-family: 'Rubik';
-    font-style: normal;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 24px;   
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+@mixin H3 {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+}
+
+@mixin H3-mob {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
 }
