@@ -157,9 +157,12 @@ chartTypesArray = Object.keys(this.chartTypes);
           categories: ["50%", "10%", "1%", "0.1%"]
         }
       });
-      this.chart.updateSeries([{
-        data: this.project.datasets[0].statisticsComparison(this.dataSource === 'API')
-      }])
+      let dataSet: {data: number[]}[] = [];
+      for (let set of this.project.datasets) {
+        dataSet.push({data: set.statisticsComparison(this.dataSource === 'API')})
+      }
+
+      this.chart.updateSeries(dataSet);
     }
   }
 }
