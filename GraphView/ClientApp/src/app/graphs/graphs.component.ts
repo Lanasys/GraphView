@@ -64,11 +64,17 @@ export class GraphsComponent {
   }
 
   project: Project = new Project();
-  dataset: DataSet;
 
   csvRecords: any;
   header: boolean = false;
   errorMessage: string = '';
+
+arrayEquals(a: any[], b: any[]) {
+  return Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((val, index) => val === b[index]);
+}
 
   fileChangeListener($event: any): void {
 
@@ -77,9 +83,12 @@ export class GraphsComponent {
     this.ngxCsvParser.parse(files[0], { header: this.header, delimiter: ',', encoding: 'utf8' })
       .pipe().subscribe({
         next: (result): void => {
-          this.dataset = ProcessData(result, files[0].name);
-          this.project.datasets.push(this.dataset);
-          console.log(this.project.datasets[0]);
+          let dataset: DataSet | null = ProcessData(result, files[0].name);
+          if (dataset != null) {
+            this.project.datasets.push(dataset);
+            console.log(this.project.datasets[0]);
+          }
+          
         },
         error: (error: NgxCSVParserError): void => {
           console.log('Error', error);
