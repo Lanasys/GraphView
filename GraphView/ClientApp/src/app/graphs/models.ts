@@ -37,7 +37,6 @@ export class DataSet {
   gpuPowerMax: number;
   gpuPowerMin: number;
 
-
   cpuClock: number[]; //CPUClk (MHz)
   cpuClockAvg: number;
   cpuUtilization: number[]; //CPUUtil (%)
