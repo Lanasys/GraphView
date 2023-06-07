@@ -29,6 +29,51 @@ export class GraphsComponent {
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions> | any;
 
+  errorMessage: string;
+  dataSource: string;
+  chartType: string;
+  
+  dataSources: { [key: string]: string } = {
+    'API': 'Time between calls',
+    'Display': 'Time between showing frames on the display'
+  }
+
+  chartTypes: { [key: string]: { name: string, subtypes: string[] | null } } = {
+    'frameTime': {
+      name: 'Frametime',
+      subtypes: null
+    },
+    'FPS': {
+      name: 'FPS',
+      subtypes: null
+    },
+    'probabilityDensity': {
+      name: 'Probability density',
+      subtypes: null
+    },
+    'statisticsComparison': {
+      name: 'Statistics comparation',
+      subtypes: ['1', '2']
+    },
+    'battery': {
+      name: 'Battery info',
+      subtypes: ['1', '2', '3'],
+    },
+    'powerAndTemperature': {
+      name: 'Power & Temperature',
+      subtypes: null
+    },
+    'loadCpuAndGpu': {
+      name: 'Load of CPU & GPU',
+      subtypes: null
+    },
+    'clock': {
+      name: 'CPU & GPU Clocks',
+      subtypes: null
+    }
+  };
+
+
   constructor(private ngxCsvParser: NgxCsvParser) {
     this.chartOptions = {
       series: [
@@ -68,14 +113,7 @@ export class GraphsComponent {
 
   csvRecords: any;
   header: boolean = false;
-  errorMessage: string = '';
 
-arrayEquals(a: any[], b: any[]) {
-  return Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((val, index) => val === b[index]);
-}
 
   fileChangeListener($event: any): void {
 
@@ -95,5 +133,31 @@ arrayEquals(a: any[], b: any[]) {
           console.log('Error', error);
         }
       });
+  }
+
+  buildChart() {
+    if (this.project.datasets.length === 0) {
+      this.errorMessage = 'No file to read!';
+      return;
+    }
+    if (!this.chartType || !this.dataSource) {
+      this.errorMessage = 'Check if everything is selected!';
+      return;
+    }
+    
+    if (this.chartType === 'statisticsComparison') {
+      this.chart.updateOptions({
+        chart: {
+          type: "bar"
+        },
+        xaxis: {
+          type: "categories",
+          categories: ["50%", "10%", "1%", "0.1%"]
+        }
+      });
+      this.chart.updateSeries([{
+        data: this.project.datasets[0].statisticsComparison(this.dataSource === 'API')
+      }])
+    }
   }
 }
