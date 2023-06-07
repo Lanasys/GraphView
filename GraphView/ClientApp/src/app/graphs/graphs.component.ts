@@ -22,6 +22,7 @@ export type ChartOptions = {
 @Component({
   selector: 'app-graphs',
   templateUrl: './graphs.component.html',
+  styleUrls: ['./graphs.component.scss']
 })
 
 export class GraphsComponent {
@@ -37,8 +38,8 @@ export class GraphsComponent {
         }
       ],
       chart: {
-        height: 800,
-        width: 1200,
+        height: 'auto',
+        width: '100%',
         type: "line",
         animations: {
           enabled: false
