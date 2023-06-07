@@ -40,6 +40,7 @@
     "@angular/compiler-cli": "^15.1.5",
     "@types/jasmine": "~4.3.1",
     "@types/jasminewd2": "~2.0.10",
+    "@types/lodash": "^4.14.195",
     "@types/node": "^18.14.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.1",

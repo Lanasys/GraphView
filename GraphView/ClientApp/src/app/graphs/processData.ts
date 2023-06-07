@@ -1,7 +1,10 @@
+import { isEqual } from 'lodash';
 import { DataSet } from './models';
+import csvHeaders from '../../assets/json/csvHeaders.json'
 
 export function ProcessData(data: any, fileName: string) {
-  //тут перевірка на версію
+
+  if (!Object.values(csvHeaders).some((arr) => isEqual(arr, data[0]))) return null;
 
   let dataSet = new DataSet();
 
