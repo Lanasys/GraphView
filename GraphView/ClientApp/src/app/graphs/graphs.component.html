@@ -1,8 +1,14 @@
-<input type="file" name="name" (change)="fileChangeListener($event)" />
-<div id="chart" style="text-align:center">
-  <apx-chart #chart [series]="chartOptions.series"
-             [chart]="chartOptions.chart"
-             [xaxis]="chartOptions.xaxis"
-             [title]="chartOptions.title"></apx-chart>
+<div class="row">
+  <div class="col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-9 col-xxl-10">
+    <div id="chart" style="text-align:center">
+      <apx-chart #chart [series]="chartOptions.series"
+                 [chart]="chartOptions.chart"
+                 [xaxis]="chartOptions.xaxis"
+                 [title]="chartOptions.title"></apx-chart>
+    </div>
+  </div>
+  <div class="col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-3 col-xxl-2">
+    <input type="file" name="name" (change)="fileChangeListener($event)" />
+  </div>
+  <div></div>
 </div>
-<div>
