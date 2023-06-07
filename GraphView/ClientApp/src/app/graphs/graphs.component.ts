@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Project, DataSet } from './models';
-import { ProcessData } from './csv';
+import { ProcessData } from './processData';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 import csvHeaders from '../../assets/json/csvHeaders.json';
 
