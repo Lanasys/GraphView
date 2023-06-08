@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="chart-wrapper col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-9 col-xxl-9">
+    <div id="chart" style="text-align:center">
+      <apx-chart #chart [series]="chartOptions.series"
+                 [chart]="chartOptions.chart"
+                 [xaxis]="chartOptions.xaxis"
+                 [stroke]="chartOptions.stroke"
+                 [title]="chartOptions.title"></apx-chart>
+    </div>
+  </div>
+  <div class="col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-3 col-xxl-3">
+    <div class="row">
+      <button id="#btnDraw" type="button" (click)="buildChart()">Draw</button>
+    </div>
+    <div class="row">
+      <input type="file" name="name" (change)="fileChangeListener($event)" />
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="options-group">
+          <div class="options-group-title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseData" aria-expanded="false" aria-controls="collapseData">
+            <h3>Data based on: <span *ngIf="dataSource" id="dataLabel">{{dataSources[dataSource]}}</span></h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6l1.41-1.42Z" /></svg>
+          </div>
+          <div class="collapse" id="collapseData">
+            <ng-container *ngFor="let dtSource of dataSources | keyvalue">
+              <div class="options-point">
+                <input type="radio" name="data" id="{{dtSource.key}}" (change)="dataSource = dtSource.key" />
+                <label for="{{dtSource.key}}">{{dtSource.value}}</label>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="options-group">
+          <div class="options-group-title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseGraphType" aria-expanded="false" aria-controls="collapseGraphType">
+            <h3>Type of chart: <span *ngIf="chartType" id="dataLabel">{{chartTypes[chartType].name}}</span></h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6l1.41-1.42Z" /></svg>
+          </div>
+          <div class="collapse" id="collapseGraphType">
+            <ng-container *ngFor="let key of chartTypesArray;">
+              <div class="options-point">
+                <input type="radio" name="type" id="{{key}}" (change)="chartType = key" />
+                <label for="{{key}}">{{chartTypes[key].name}}</label>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div></div>
+</div>

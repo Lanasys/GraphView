@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphView", "GraphView\GraphView.csproj", "{F61F7054-FF57-4EC4-8BF9-930960D60B96}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F61F7054-FF57-4EC4-8BF9-930960D60B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F61F7054-FF57-4EC4-8BF9-930960D60B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F61F7054-FF57-4EC4-8BF9-930960D60B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F61F7054-FF57-4EC4-8BF9-930960D60B96}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {39E1B287-CFBE-43B3-8EE6-6473AD35A083}
+	EndGlobalSection
+EndGlobal

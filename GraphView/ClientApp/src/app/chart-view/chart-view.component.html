@@ -1,0 +1,12 @@
+<div id="chart" style="text-align:center">
+  <apx-chart #chart [series]="chartOptions.series"
+             [chart]="chartOptions.chart"
+             [xaxis]="chartOptions.xaxis"
+             [title]="chartOptions.title"></apx-chart>
+</div>
+<div>
+  <button (click)="changeChartType('bar')">Switch to Bar Chart</button>
+  <button (click)="changeChartType('line')">Switch to line Chart</button>
+  <button (click)="changeChartType('heatmap')">Switch to heatmap Chart</button>
+  <input #fileImportInput type="file" name="name" (change)="fileChangeListener($event)"  />
+</div>
