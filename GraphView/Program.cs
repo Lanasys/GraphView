@@ -3,6 +3,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+if (builder.Environment.IsProduction())
+{
+    builder.WebHost.UseUrls("http://[::]:25564");
+}
 
 var app = builder.Build();
 
@@ -13,7 +17,11 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment()) // temporarily, remove later
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseStaticFiles();
 app.UseRouting();
 
