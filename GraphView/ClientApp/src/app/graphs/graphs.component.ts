@@ -10,12 +10,14 @@ import {
   ApexChart,
   ApexXAxis,
   ApexStroke,
-  ApexTitleSubtitle
+  ApexTitleSubtitle,
+  ApexYAxis
 } from "ng-apexcharts";
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
+  yaxis: ApexYAxis;
   xaxis: ApexXAxis;
   title: ApexTitleSubtitle;
   storke: ApexStroke;
@@ -177,11 +179,17 @@ chartTypesArray = Object.keys(this.chartTypes);
         },
         stroke:{
           curve: 'smooth'
+        },
+        yaxis: {
+          show: true,
+          forceNiceScale: true,
+          decimalsInFloat: true
         }
       })
       this.chart.updateOptions({
         xaxis: {
           type: 'category',
+          tickAmount: 4,
           categories: Object.keys(this.project.datasets[0].probabilityDensity(this.dataSource === 'API',2))
         }
       })
