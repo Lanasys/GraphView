@@ -9,6 +9,7 @@ import {
   ApexAxisChartSeries,
   ApexChart,
   ApexXAxis,
+  ApexStroke,
   ApexTitleSubtitle
 } from "ng-apexcharts";
 
@@ -17,6 +18,7 @@ export type ChartOptions = {
   chart: ApexChart;
   xaxis: ApexXAxis;
   title: ApexTitleSubtitle;
+  storke: ApexStroke;
 };
 
 @Component({
@@ -32,7 +34,7 @@ export class GraphsComponent {
   errorMessage: string;
   dataSource: string;
   chartType: string;
-  
+
   dataSources: { [key: string]: string } = {
     'API': 'Time between calls',
     'Display': 'Time between showing frames on the display'
@@ -129,7 +131,7 @@ chartTypesArray = Object.keys(this.chartTypes);
             this.project.datasets.push(dataset);
             console.log(this.project);
           }
-          
+
         },
         error: (error: NgxCSVParserError): void => {
           console.log('Error', error);
@@ -146,7 +148,7 @@ chartTypesArray = Object.keys(this.chartTypes);
       this.errorMessage = 'Check if everything is selected!';
       return;
     }
-    
+
     if (this.chartType === 'statisticsComparison') {
       this.chart.updateOptions({
         chart: {
@@ -163,6 +165,26 @@ chartTypesArray = Object.keys(this.chartTypes);
       }
 
       this.chart.updateSeries(dataSet);
+    }
+    else if (this.chartType === 'probabilityDensity') {
+      console.log(this.project.datasets[0].probabilityDensity(this.dataSource === 'API',2));
+      this.chart.updateSeries([{
+        data: Object.values(this.project.datasets[0].probabilityDensity(this.dataSource === 'API',2))
+      }]);
+      this.chart.updateOptions ({
+        chart:{
+          type: 'line'
+        },
+        stroke:{
+          curve: 'smooth'
+        }
+      })
+      this.chart.updateOptions({
+        xaxis: {
+          type: 'category',
+          categories: Object.keys(this.project.datasets[0].probabilityDensity(this.dataSource === 'API',2))
+        }
+      })
     }
   }
 }

@@ -62,7 +62,7 @@ export class DataSet {
   batteryDrainRateMin: number;
 
 
-  statisticsComparison(isApi: boolean): number[] {
+  public statisticsComparison(isApi: boolean): number[] {
     let FPS: number[];
     if (isApi) {
       FPS = this.frameTimePresent.map((element: number) => Math.round(1000 / element));
@@ -70,7 +70,7 @@ export class DataSet {
     else {
       FPS = this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
     }
-    
+
     let avgFPS: number = FPS.reduce((a, b) => a + b, 0) / FPS.length;
     FPS.sort((a: number, b: number) => a - b);
     console.log(FPS);
@@ -116,10 +116,33 @@ export class DataSet {
         pc01 = Number(fps);
       }
     }
-
+    console.log(Count);
     let res: number[] = [];
     res.push(pc50, pc10, pc1, pc01);
 
     return res;
+  }
+
+  public probabilityDensity(isApi: boolean, eps: number = 2) {
+    let FPS: number[];
+    if (isApi) {
+      FPS = this.frameTimePresent.map((element: number) => Number(Math.round(1000 / element ).toFixed(eps)));
+    }
+    else {
+      FPS = this.frameTimeDisplayChange.map((element: number) => Number(Math.round(1000 / element ).toFixed(eps)));
+    }
+    FPS.sort((a: number, b: number) => a - b);
+    // console.log(FPS);
+    // console.log(Math.max(...FPS));
+    let probability: {[key: number]: number} = FPS.reduce((acc:any, item:number) => {
+      acc[item] = (acc[item] || 0) + 1;
+      return acc;
+    }, {});
+
+    //console.log(probability);
+    Object.keys(probability).forEach((key) => {
+      probability[Number(key)] = probability[Number(key)] * 100 / FPS.length;
+    });
+    return probability;
   }
 }
