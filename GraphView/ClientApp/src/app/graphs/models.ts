@@ -74,22 +74,11 @@ export class DataSet {
     let avgFPS: number = FPS.reduce((a, b) => a + b, 0) / FPS.length;
     FPS.sort((a: number, b: number) => a - b);
     console.log(FPS);
-    let Count: { [key: number]: number } = {};
 
-    for (let i = 0; i < FPS.length;) {
-      let j: number;
-      for (j = i; j < FPS.length; j++) {
-        if (FPS[i] != FPS[j]) {
-          if (FPS[i] > 0) Count[FPS[i]] = j - i;
-          i = j;
-          break;
-        }
-      }
-      if (j == FPS.length) {
-        if (FPS[i] > 0) Count[FPS[i]] = j - i;
-        break;
-      }
-    }
+    let Count: { [key: number]: number } = FPS.reduce((acc: any, item: number) => {
+      acc[item] = (acc[item] || 0) + 1;
+      return acc;
+    }, {});
 
     let pc50 = 0, pc10 = 0, pc1 = 0, pc01 = 0;
     let pc50b = false, pc10b = false, pc1b = false, pc01b = false;
@@ -123,18 +112,17 @@ export class DataSet {
     return res;
   }
 
-  public probabilityDensity(isApi: boolean, eps: number = 2) {
+  public probabilityDensity(isApi: boolean, eps: number = 2): { [key: number]: number } {
     let FPS: number[];
     if (isApi) {
-      FPS = this.frameTimePresent.map((element: number) => Number(Math.round(1000 / element ).toFixed(eps)));
+      FPS = this.frameTimePresent.map((element: number) => Number(Math.round(1000 / element).toFixed(eps)));
     }
     else {
-      FPS = this.frameTimeDisplayChange.map((element: number) => Number(Math.round(1000 / element ).toFixed(eps)));
+      FPS = this.frameTimeDisplayChange.map((element: number) => Number(Math.round(1000 / element).toFixed(eps)));
     }
-    FPS.sort((a: number, b: number) => a - b);
     // console.log(FPS);
     // console.log(Math.max(...FPS));
-    let probability: {[key: number]: number} = FPS.reduce((acc:any, item:number) => {
+    let probability: { [key: number]: number } = FPS.reduce((acc: any, item: number) => {
       acc[item] = (acc[item] || 0) + 1;
       return acc;
     }, {});
@@ -144,5 +132,26 @@ export class DataSet {
       probability[Number(key)] = probability[Number(key)] * 100 / FPS.length;
     });
     return probability;
+  }
+
+  public FPS(isApi: boolean): { [key: number]: number } {
+    let FPS: number[];
+    if (isApi) {
+      FPS = this.frameTimePresent.map((element: number) => Math.round(1000 / element));
+    }
+    else {
+      FPS = this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
+    }
+
+    return this.time.reduce((o, k, i) => ({ ...o, [k]: FPS[i] }), {})
+  }
+
+  public frameTime(isApi: boolean) {
+    if (isApi) {
+      return this.time.reduce((o, k, i) => ({ ...o, [k]: this.frameTimePresent[i] }), {});
+    }
+    else {
+      return this.time.reduce((o, k, i) => ({ ...o, [k]: this.frameTimeDisplayChange[i] }), {})
+    }
   }
 }
