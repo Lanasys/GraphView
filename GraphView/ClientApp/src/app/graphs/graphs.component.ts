@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { Project, DataSet } from './models';
 import { ProcessData } from './processData';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
-import csvHeaders from '../../assets/json/csvHeaders.json';
 
 import {
   ChartComponent,
@@ -10,12 +9,14 @@ import {
   ApexChart,
   ApexXAxis,
   ApexStroke,
-  ApexTitleSubtitle
+  ApexTitleSubtitle,
+  ApexYAxis
 } from "ng-apexcharts";
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
+  yaxis: ApexYAxis;
   xaxis: ApexXAxis;
   title: ApexTitleSubtitle;
   storke: ApexStroke;
@@ -149,6 +150,8 @@ chartTypesArray = Object.keys(this.chartTypes);
       return;
     }
 
+    let isApi = this.dataSource === 'API';
+
     if (this.chartType === 'statisticsComparison') {
       this.chart.updateOptions({
         chart: {
@@ -159,30 +162,109 @@ chartTypesArray = Object.keys(this.chartTypes);
           categories: ["50%", "10%", "1%", "0.1%"]
         }
       });
-      let dataSet: {data: number[]}[] = [];
+      let dataSet: { data: number[] }[] = [];
       for (let set of this.project.datasets) {
-        dataSet.push({data: set.statisticsComparison(this.dataSource === 'API')})
+        dataSet.push({ data: set.statisticsComparison(isApi) })
       }
 
       this.chart.updateSeries(dataSet);
     }
     else if (this.chartType === 'probabilityDensity') {
-      console.log(this.project.datasets[0].probabilityDensity(this.dataSource === 'API',2));
-      this.chart.updateSeries([{
-        data: Object.values(this.project.datasets[0].probabilityDensity(this.dataSource === 'API',2))
-      }]);
-      this.chart.updateOptions ({
-        chart:{
+      let dataSet: { data: number[] }[] = [];
+
+      for (let set of this.project.datasets) {
+        dataSet.push({ data: Object.values(set.probabilityDensity(isApi)) })
+      }
+
+      this.chart.updateSeries(dataSet);
+      this.chart.updateOptions({
+        chart: {
           type: 'line'
         },
-        stroke:{
+        stroke: {
           curve: 'smooth'
+        },
+        yaxis: {
+          show: true,
+          forceNiceScale: true,
+          decimalsInFloat: true
+        }
+      });
+      this.chart.updateOptions({
+        xaxis: {
+          type: 'category',
+          tickAmount: 4,
+          categories: Object.keys(this.project.datasets[0].probabilityDensity(isApi, 2))
+        }
+      });
+    }
+    else if (this.chartType === 'FPS') {
+      let dataSet: { data: number[] }[] = [];
+
+      for (let set of this.project.datasets) {
+        dataSet.push({ data: Object.values(set.FPS(isApi)) })
+      }
+      this.chart.updateSeries(dataSet);
+      this.chart.updateOptions({
+        chart: {
+          type: 'line'
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+        yaxis: {
+          show: true,
+          forceNiceScale: true,
+          decimalsInFloat: true,
+          title: {
+            text: 'FPS'
+          },
         }
       })
       this.chart.updateOptions({
         xaxis: {
           type: 'category',
-          categories: Object.keys(this.project.datasets[0].probabilityDensity(this.dataSource === 'API',2))
+          tickAmount: 4,
+          decimalsInFloat: true,
+          title: {
+            text: 'Time'
+          },
+          categories: Object.keys(this.project.datasets[0].FPS(isApi)).map((value) => value = Number(value).toFixed(2))
+        }
+      })
+    }
+    else if (this.chartType === 'frameTime') {
+      let dataSet: { data: number[] }[] = [];
+
+      for (let set of this.project.datasets) {
+        dataSet.push({ data: Object.values(set.frameTime(isApi)) })
+      }
+      this.chart.updateSeries(dataSet);
+      this.chart.updateOptions({
+        chart: {
+          type: 'line'
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+        yaxis: {
+          show: true,
+          forceNiceScale: true,
+          decimalsInFloat: true,
+          title: {
+            text: 'FrameTime'
+          },
+        }
+      })
+      this.chart.updateOptions({
+        xaxis: {
+          type: 'category',
+          tickAmount: 4,
+          decimalsInFloat: true,
+          title: {
+            text: 'Time'
+          },
+          categories: Object.keys(this.project.datasets[0].frameTime(isApi)).map((value) => value = Number(value).toFixed(2))
         }
       })
     }
