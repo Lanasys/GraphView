@@ -1,26 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { ChartViewComponent } from '../chart-view/chart-view.component'
 import { Project, DataSet } from './models';
 import { ProcessData } from './processData';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
-
-import {
-  ChartComponent,
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexStroke,
-  ApexTitleSubtitle,
-  ApexYAxis
-} from "ng-apexcharts";
-
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  yaxis: ApexYAxis;
-  xaxis: ApexXAxis;
-  title: ApexTitleSubtitle;
-  storke: ApexStroke;
-};
 
 @Component({
   selector: 'app-graphs',
@@ -29,8 +11,38 @@ export type ChartOptions = {
 })
 
 export class GraphsComponent {
-  @ViewChild("chart") chart: ChartComponent;
-  public chartOptions: Partial<ChartOptions> | any;
+  @ViewChild(ChartViewComponent) chartComponent!: ChartViewComponent;
+  dataOptions = {
+    series: [
+      {
+        name: "Test",
+        data: [10, 22, 22, 23, 43, 54, 69, 43, 2]
+      }
+    ],
+    chart: {
+      width: '100%',
+      type: "line",
+      animations: {
+        enabled: false
+      },
+      toolbar: {
+        tools: {
+          selection: false,
+          zoom: false,
+          zoomin: false,
+          zoomout: false,
+          pan: false,
+          reset: false
+        }
+      }
+    },
+    xaxis: {
+      type: 'numeric'
+    },
+    title: {
+      text: "My First Angular Chart"
+    }
+  };
 
   errorMessage: string;
   dataSource: string;
@@ -76,42 +88,11 @@ export class GraphsComponent {
     }
   };
 
-chartTypesArray = Object.keys(this.chartTypes);
+  chartTypesArray = Object.keys(this.chartTypes);
 
 
-  constructor(private ngxCsvParser: NgxCsvParser) {
-    this.chartOptions = {
-      series: [
-        {
-          name: "My-series",
-          data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-        }
-      ],
-      chart: {
-        height: 'auto',
-        width: '100%',
-        type: "line",
-        animations: {
-          enabled: false
-        },
-        toolbar: {
-          tools: {
-            selection: false,
-            zoom: false,
-            zoomin: false,
-            zoomout: false,
-            pan: false,
-            reset: false
-          }
-        }
-      },
-      xaxis: {
-        type: 'numeric'
-      },
-      title: {
-        text: "My First Angular Chart"
-      }
-    };
+  constructor(private ngxCsvParser: NgxCsvParser, private changeDetectorRef: ChangeDetectorRef) {
+    
   }
 
   project: Project = new Project();
@@ -153,21 +134,21 @@ chartTypesArray = Object.keys(this.chartTypes);
     let isApi = this.dataSource === 'API';
 
     if (this.chartType === 'statisticsComparison') {
-      this.chart.updateOptions({
-        chart: {
-          type: "bar"
-        },
-        xaxis: {
-          type: "categories",
-          categories: ["50%", "10%", "1%", "0.1%"]
-        }
-      });
+      //this.chart.updateOptions({
+      //  chart: {
+      //    type: "bar"
+      //  },
+      //  xaxis: {
+      //    type: "categories",
+      //    categories: ["50%", "10%", "1%", "0.1%"]
+      //  }
+      //});
       let dataSet: { data: number[] }[] = [];
       for (let set of this.project.datasets) {
         dataSet.push({ data: set.statisticsComparison(isApi) })
       }
 
-      this.chart.updateSeries(dataSet);
+      /*this.chart.updateSeries(dataSet);*/
     }
     else if (this.chartType === 'probabilityDensity') {
       let dataSet: { data: number[] }[] = [];
@@ -176,62 +157,92 @@ chartTypesArray = Object.keys(this.chartTypes);
         dataSet.push({ data: Object.values(set.probabilityDensity(isApi)) })
       }
 
-      this.chart.updateSeries(dataSet);
-      this.chart.updateOptions({
-        chart: {
-          type: 'line'
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        yaxis: {
-          show: true,
-          forceNiceScale: true,
-          decimalsInFloat: true
-        }
-      });
-      this.chart.updateOptions({
-        xaxis: {
-          type: 'category',
-          tickAmount: 4,
-          categories: Object.keys(this.project.datasets[0].probabilityDensity(isApi, 2))
-        }
-      });
+      //this.chart.updateSeries(dataSet);
+      //this.chart.updateOptions({
+      //  chart: {
+      //    type: 'line'
+      //  },
+      //  stroke: {
+      //    curve: 'smooth'
+      //  },
+      //  yaxis: {
+      //    show: true,
+      //    forceNiceScale: true,
+      //    decimalsInFloat: true
+      //  }
+      //});
+      //this.chart.updateOptions({
+      //  xaxis: {
+      //    type: 'category',
+      //    tickAmount: 4,
+      //    categories: Object.keys(this.project.datasets[0].probabilityDensity(isApi, 2))
+      //  }
+      //});
     }
     else if (this.chartType === 'FPS') {
-      let dataSet: { data: number[] }[] = [];
+      let dataSet: {name: string, data: number[] }[] = [];
 
       for (let set of this.project.datasets) {
-        dataSet.push({ data: Object.values(set.FPS(isApi)) })
+        dataSet.push({name: set.displayName, data: Object.values(set.FPS(isApi)) })
       }
-      this.chart.updateSeries(dataSet);
-      this.chart.updateOptions({
+
+      this.dataOptions = {
+        series: dataSet,
         chart: {
-          type: 'line'
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        yaxis: {
-          show: true,
-          forceNiceScale: true,
-          decimalsInFloat: true,
-          title: {
-            text: 'FPS'
+          width: '100%',
+          type: "line",
+          animations: {
+            enabled: false
           },
-        }
-      })
-      this.chart.updateOptions({
+          toolbar: {
+            tools: {
+              selection: false,
+              zoom: false,
+              zoomin: false,
+              zoomout: false,
+              pan: false,
+              reset: false
+            }
+          }
+        },
         xaxis: {
-          type: 'category',
-          tickAmount: 4,
-          decimalsInFloat: true,
-          title: {
-            text: 'Time'
-          },
-          categories: Object.keys(this.project.datasets[0].FPS(isApi)).map((value) => value = Number(value).toFixed(2))
+          type: 'numeric'
+        },
+        title: {
+          text: "Test"
         }
-      })
+      };
+      setTimeout(() => {
+        this.chartComponent.updateChart();
+      }, 0);
+
+      //this.chart.updateOptions({
+      //  chart: {
+      //    type: 'line'
+      //  },
+      //  stroke: {
+      //    curve: 'smooth'
+      //  },
+      //  yaxis: {
+      //    show: true,
+      //    forceNiceScale: true,
+      //    decimalsInFloat: true,
+      //    title: {
+      //      text: 'FPS'
+      //    },
+      //  }
+      //})
+      //this.chart.updateOptions({
+      //  xaxis: {
+      //    type: 'category',
+      //    tickAmount: 4,
+      //    decimalsInFloat: true,
+      //    title: {
+      //      text: 'Time'
+      //    },
+      //    categories: Object.keys(this.project.datasets[0].FPS(isApi)).map((value) => value = Number(value).toFixed(2))
+      //  }
+      //})
     }
     else if (this.chartType === 'frameTime') {
       let dataSet: { data: number[] }[] = [];
@@ -239,34 +250,34 @@ chartTypesArray = Object.keys(this.chartTypes);
       for (let set of this.project.datasets) {
         dataSet.push({ data: Object.values(set.frameTime(isApi)) })
       }
-      this.chart.updateSeries(dataSet);
-      this.chart.updateOptions({
-        chart: {
-          type: 'line'
-        },
-        stroke: {
-          curve: 'smooth'
-        },
-        yaxis: {
-          show: true,
-          forceNiceScale: true,
-          decimalsInFloat: true,
-          title: {
-            text: 'FrameTime'
-          },
-        }
-      })
-      this.chart.updateOptions({
-        xaxis: {
-          type: 'category',
-          tickAmount: 4,
-          decimalsInFloat: true,
-          title: {
-            text: 'Time'
-          },
-          categories: Object.keys(this.project.datasets[0].frameTime(isApi)).map((value) => value = Number(value).toFixed(2))
-        }
-      })
-    }
+      //this.chart.updateSeries(dataSet);
+      //this.chart.updateOptions({
+      //  chart: {
+      //    type: 'line'
+      //  },
+      //  stroke: {
+      //    curve: 'smooth'
+      //  },
+      //  yaxis: {
+      //    show: true,
+      //    forceNiceScale: true,
+      //    decimalsInFloat: true,
+      //    title: {
+      //      text: 'FrameTime'
+      //    },
+      //  }
+      //})
+      //this.chart.updateOptions({
+      //  xaxis: {
+      //    type: 'category',
+      //    tickAmount: 4,
+      //    decimalsInFloat: true,
+      //    title: {
+      //      text: 'Time'
+      //    },
+      //    categories: Object.keys(this.project.datasets[0].frameTime(isApi)).map((value) => value = Number(value).toFixed(2))
+      //  }
+      //})
+    }    
   }
 }
