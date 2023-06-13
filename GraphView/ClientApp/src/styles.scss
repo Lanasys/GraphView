@@ -6,3 +6,43 @@
 body {
   background-color: $body-color !important;
 }
+
+.btn {
+  width: 100%;
+  background-color: $secondary-color;
+  color: $white;
+  border: 1px solid $primary-color;
+  @include H3-mob;
+
+  &:hover {
+    background-color: $primary-color;
+    border: 1px solid $secondary-color;
+    color: $body-color;
+  }
+
+  @media(min-width: $main-bp) {
+    @include H3;
+  }
+}
+
+.modal-dialog {
+  @include H3-mob;
+
+  @media(min-width: $main-bp) {
+    @include H3;
+  }
+
+  .modal-content {
+    background-color: $body-color;
+    color: $primary-color;
+    border: 2px solid $primary-color;
+
+    .modal-header {
+      border-bottom: 2px solid $primary-color;
+    }
+
+    .modal-footer {
+      border-top: 2px solid $primary-color;
+    }
+  }
+}

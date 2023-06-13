@@ -1,3 +1,9 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins';
+
+$main-bp: map-get($grid-breakpoints, "lg");
+
 $purple: #9DA8FB;
 $yellow: #FBD574;
 $green: #7BE0AD;
@@ -7,6 +13,7 @@ $blue: #5AA9E6;
 $white: #FDFDFD;
 $primary-color: #3c486b;
 $secondary-color: #667bb7;
+$tertiary-color: #cad9ff;
 $body-color: #b4c5e3;
 
 @mixin H1 {
@@ -53,6 +60,22 @@ $body-color: #b4c5e3;
   font-family: 'Rubik';
   font-style: normal;
   font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+@mixin H4 {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+}
+
+@mixin H4-mob {
+  font-family: 'Rubik';
+  font-style: normal;
+  font-weight: 400;
   font-size: 14px;
   line-height: 17px;
 }

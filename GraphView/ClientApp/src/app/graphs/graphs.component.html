@@ -1,13 +1,148 @@
+<div class="modal fade" id="dataset1" tabindex="-1" aria-labelledby="dataset1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">All info</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <h3>File name</h3>
+          <p>test.csv</p>
+        </div>
+        <div class="row">
+          <h3>Name</h3>
+          <p>Тут буде можливість змінити назву</p>
+        </div>
+        <div class="row mt-3">
+          <h3>Application name:</h3>
+          <p>RDR2.exe</p>
+        </div>
+        <div class="row">
+          <h3>API:</h3>
+          <p>Vulkan</p>
+        </div>
+        <div class="row">
+          <h3>Resolution:</h3>
+          <p>1920*1080</p>
+        </div>
+        <div class="row mt-3">
+          <h3>CPU:</h3>
+          <p>Intel Core i9-10850K</p>
+        </div>
+        <div class="row">
+          <h3>Clock (avg), MHz:</h3>
+          <p>4900</p>
+        </div>
+        <div class="row">
+          <h3>Utilization (avg), %:</h3>
+          <p>85</p>
+        </div>
+        <div class="row">
+          <h3>Temperature (avg/min/max), °C:</h3>
+          <p>70/35/91</p>
+        </div>
+        <div class="row">
+          <h3>Power (avg/min/max), W:</h3>
+          <p>130/75/250</p>
+        </div>
+        <div class="row">
+          <h3>TDP (min/max), W:</h3>
+          <p>35/120</p>
+        </div>
+        <div class="row mt-3">
+          <h3>GPU:</h3>
+          <p>RTX 2070</p>
+        </div>
+        <div class="row">
+          <h3>Core clock (avg), MHz:</h3>
+          <p>2150</p>
+        </div>
+        <div class="row">
+          <h3>Memory clock (avg), MHz:</h3>
+          <p>1950</p>
+        </div>
+        <div class="row">
+          <h3>Utilization (avg), %:</h3>
+          <p>99</p>
+        </div>
+        <div class="row">
+          <h3>Temperature (avg/min/max), °C:</h3>
+          <p>70/35/91</p>
+        </div>
+        <div class="row">
+          <h3>Power (avg/min/max), W:</h3>
+          <p>130/75/250</p>
+        </div>
+        <div class="row mt-3">
+          <h3>Average FPS (API/Display):</h3>
+          <p>30/30</p>
+        </div>
+        <div class="row">
+          <h3>Modal FPS (API/Display):</h3>
+          <p>35/35</p>
+        </div>
+        <div class="row">
+          <h3>50%, FPS (API/Display):</h3>
+          <p>33/32</p>
+        </div>
+        <div class="row">
+          <h3>10%, FPS (API/Display):</h3>
+          <p>19/18</p>
+        </div>
+        <div class="row">
+          <h3>1%, FPS (API/Display):</h3>
+          <p>15/13</p>
+        </div>
+        <div class="row">
+          <h3>0.1%, FPS (API/Display):</h3>
+          <p>12/9</p>
+        </div>
+        <div class="row mt-3">
+          <h3>Battery drain rate (avg/min/max), W:</h3>
+          <p>40/10/65</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="row">
   <div class="chart-wrapper col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-9 col-xxl-9">
-   <app-chart-view #chartView *ngIf="dataOptions" [options]="dataOptions"></app-chart-view>
+    <app-chart-view #chartView *ngIf="dataOptions" [options]="dataOptions"></app-chart-view>
   </div>
   <div class="col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-3 col-xxl-3">
     <div class="row">
-      <button id="#btnDraw" type="button" (click)="buildChart()">Draw</button>
-    </div>
-    <div class="row">
-      <input type="file" name="name" (change)="fileChangeListener($event)" />
+      <div class="col-12">
+        <button class="btn" id="#btnDraw" type="button" (click)="buildChart()">Draw</button>
+      </div>
+      <div class="col-12">
+        <div class="dataset-control">
+          <div class="dataset">
+            <input type="checkbox" id="testCheck" />
+            <label>Dataset1</label>
+            <svg data-bs-toggle="modal" data-bs-target="#dataset1" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M11 17h2v-6h-2v6Zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.713T12 7q-.425 0-.713.288T11 8q0 .425.288.713T12 9Zm0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Zm0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20Zm0-8Z" /></svg>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <button type="button" class="btn">Select all</button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="btn">Unselect all</button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="btn">Invert select</button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="btn">Delete</button>
+            </div>
+          </div>
+          <input type="file" name="name" (change)="fileChangeListener($event)" />
+        </div>
+      </div>
+
     </div>
     <div class="row">
       <div class="col-12">
