@@ -209,7 +209,7 @@ export class GraphsComponent {
           type: 'numeric'
         },
         title: {
-          text: "Test"
+          text: this.project.name
         }
       };
       setTimeout(() => {

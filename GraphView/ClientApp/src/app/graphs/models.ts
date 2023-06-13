@@ -135,16 +135,16 @@ export class DataSet {
   }
 
   public FPS(isApi: boolean): { [key: number]: number } {
-    let FPS: number[];
-    if (isApi) {
-      FPS = this.frameTimePresent.map((element: number) => Math.round(1000 / element));
-    }
-    else {
-      FPS = this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
+    const FPS: number[] = isApi ? this.frameTimePresent.map((element: number) => Math.round(1000 / element)) : this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
+
+    const result: { [key: number]: number } = {};
+    for (let i = 0; i < this.time.length; i++) {
+      result[this.time[i]] = FPS[i];
     }
 
-    return this.time.reduce((o, k, i) => ({ ...o, [k]: FPS[i] }), {})
+    return result;
   }
+
 
   public frameTime(isApi: boolean) {
     if (isApi) {
