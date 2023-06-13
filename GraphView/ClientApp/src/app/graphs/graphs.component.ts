@@ -140,9 +140,7 @@ export class GraphsComponent {
 
   delete() {
     if (!this.selectedDatasets.length) return;
-    for (let index of this.selectedDatasets) {
-      this.project.datasets.splice(index, 1);
-    }
+    this.project.datasets = this.project.datasets.filter((_, index) => !this.selectedDatasets.includes(index));
     this.selectedDatasets = [];
   }
 
