@@ -19,6 +19,7 @@ export class DataSet {
   cpuName: string; //CPU
 
   time: number[] = []; //TimeInSeconds
+  timeDisplay: number[] = []; //TimeInSeconds
   frameTimePresent: number[] = []; //MsBetweenPresents
   frameTimeDisplayChange: number[] = []; //MsBetweenDisplayChange
 
@@ -138,8 +139,14 @@ export class DataSet {
     const FPS: number[] = isApi ? this.frameTimePresent.map((element: number) => Math.round(1000 / element)) : this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
 
     const result: { [key: number]: number } = {};
-    for (let i = 0; i < this.time.length; i++) {
-      result[this.time[i]] = FPS[i];
+    if (isApi) {
+      for (let i = 0; i < this.time.length; i++) {
+        result[this.time[i]] = FPS[i];
+      }
+    } else {
+      for (let i = 0; i < this.timeDisplay.length; i++) {
+        result[this.timeDisplay[i]] = FPS[i];
+      }
     }
 
     return result;
@@ -147,11 +154,18 @@ export class DataSet {
 
 
   public frameTime(isApi: boolean) {
+    const result: { [key: number]: number } = {};
+
     if (isApi) {
-      return this.time.reduce((o, k, i) => ({ ...o, [k]: this.frameTimePresent[i] }), {});
+      for (let i = 0; i < this.time.length; i++) {
+        result[this.time[i]] = this.frameTimePresent[i];
+      }
+    } else {
+      for (let i = 0; i < this.timeDisplay.length; i++) {
+        result[this.timeDisplay[i]] = this.frameTimeDisplayChange[i];
+      }
     }
-    else {
-      return this.time.reduce((o, k, i) => ({ ...o, [k]: this.frameTimeDisplayChange[i] }), {})
-    }
+
+    return result;
   }
 }

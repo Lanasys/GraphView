@@ -32,7 +32,10 @@ export function ProcessData(data: any, fileName: string) {
   for (let i = 1; i < data.length; i++) {
     dataSet.time.push(Number(data[i][12] * 1000 - zeroTime));
     dataSet.frameTimePresent.push(Number(data[i][13]));
-    dataSet.frameTimeDisplayChange.push(Number(data[i][14]));
+    if (Number(data[i][14]) != 0) {
+      dataSet.frameTimeDisplayChange.push(Number(data[i][14]));
+      dataSet.timeDisplay.push(Number(data[i][12] * 1000 - zeroTime));
+    }
 
     dataSet.gpuClock.push(Number(data[i][20]));
     dataSet.gpuMemoryClock.push(Number(data[i][21]));

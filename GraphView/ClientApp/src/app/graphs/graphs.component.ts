@@ -245,7 +245,7 @@ export class GraphsComponent {
           tickAmount: 4,
           decimalsInFloat: 2,
           title: {
-            text: 'Time'
+            text: 'Time, ms'
           },
         },
         title: {
@@ -254,10 +254,10 @@ export class GraphsComponent {
       };
     }
     else if (this.chartType === 'frameTime') {
-      let dataSet: { data: number[] }[] = [];
+      let dataSet: {name: string, data: number[] }[] = [];
 
       for (let set of this.project.datasets) {
-        dataSet.push({ data: Object.values(set.frameTime(isApi)) })
+        dataSet.push({name: set.displayName, data: Object.values(set.frameTime(isApi)) })
       }
 
       this.dataOptions = {
@@ -286,7 +286,7 @@ export class GraphsComponent {
           forceNiceScale: true,
           decimalsInFloat: 2,
           title: {
-            text: 'FrameTime'
+            text: 'FrameTime, ms'
           },
         },
         xaxis: {
@@ -294,9 +294,9 @@ export class GraphsComponent {
           tickAmount: 4,
           decimalsInFloat: 2,
           title: {
-            text: 'Time'
+            text: 'Time, ms'
           },
-          categories: Object.keys(this.project.datasets[0].frameTime(isApi)).map(Number)
+          categories: Object.keys(this.project.datasets[0].frameTime(isApi)).map(Number).sort((a, b) => a - b)
         },
         title: {
           text: this.project.name
