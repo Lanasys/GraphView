@@ -62,8 +62,14 @@ export class DataSet {
   batteryDrainRateMax: number;
   batteryDrainRateMin: number;
 
+  avgFPSAPI: number;
+  avgFPSDisplay: number;
+  modeFPSAPI: number;
+  modeFPSDisplay: number;
+  statisticsAPI: number[];
+  statisticsDisplay: number[];
 
-  public statisticsComparison(isApi: boolean): number[] {
+  public statisticsComparison(isApi: boolean): [number[], number, number] {
     let FPS: number[];
     if (isApi) {
       FPS = this.frameTimePresent.map((element: number) => Math.round(1000 / element));
@@ -110,7 +116,17 @@ export class DataSet {
     let res: number[] = [];
     res.push(pc50, pc10, pc1, pc01);
 
-    return res;
+    for (const key in Count) {
+      if (Count.hasOwnProperty(key)) {
+        const value = Count[key];
+        if (value > countModeFPS) {
+          modeFPS = Number(key);
+          countModeFPS = value;
+        }
+      }
+    }
+    
+    return [res, avgFPS, modeFPS];
   }
 
   public probabilityDensity(isApi: boolean, eps: number = 2): { [key: number]: number } {

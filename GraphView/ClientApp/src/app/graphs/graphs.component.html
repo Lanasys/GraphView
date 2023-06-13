@@ -4,10 +4,10 @@
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">All info</h5>
       </div>
-      <div class="modal-body">
+      <div *ngIf="currentDataset !== -1" class="modal-body">
         <div class="row">
           <h3>File name</h3>
-          <p>test.csv</p>
+          <p>{{project.datasets[currentDataset].name}}</p>
         </div>
         <div class="row">
           <h3>Name</h3>
@@ -15,91 +15,91 @@
         </div>
         <div class="row mt-3">
           <h3>Application name:</h3>
-          <p>RDR2.exe</p>
+          <p>{{project.datasets[currentDataset].applicationName}}</p>
         </div>
         <div class="row">
           <h3>API:</h3>
-          <p>Vulkan</p>
+          <p>{{project.datasets[currentDataset].runtime}}</p>
         </div>
         <div class="row">
           <h3>Resolution:</h3>
-          <p>1920*1080</p>
+          <p>{{project.datasets[currentDataset].resolution}}</p>
         </div>
         <div class="row mt-3">
           <h3>CPU:</h3>
-          <p>Intel Core i9-10850K</p>
+          <p>{{project.datasets[currentDataset].cpuName}}</p>
         </div>
         <div class="row">
           <h3>Clock (avg), MHz:</h3>
-          <p>4900</p>
+          <p>{{project.datasets[currentDataset].cpuClockAvg}}</p>
         </div>
         <div class="row">
           <h3>Utilization (avg), %:</h3>
-          <p>85</p>
+          <p>{{project.datasets[currentDataset].cpuUtilizationAvg}}</p>
         </div>
         <div class="row">
           <h3>Temperature (avg/min/max), °C:</h3>
-          <p>70/35/91</p>
+          <p>{{project.datasets[currentDataset].cpuTemperatureAvg}}/{{project.datasets[currentDataset].cpuTemperatureMin}}/{{project.datasets[currentDataset].cpuTemperatureMax}}</p>
         </div>
         <div class="row">
           <h3>Power (avg/min/max), W:</h3>
-          <p>130/75/250</p>
+          <p>{{project.datasets[currentDataset].cpuPowerAvg}}/{{project.datasets[currentDataset].cpuPowerMin}}/{{project.datasets[currentDataset].cpuPowerMax}}</p>
         </div>
         <div class="row">
           <h3>TDP (min/max), W:</h3>
-          <p>35/120</p>
+          <p>{{project.datasets[currentDataset].cpuTDPMin}}/{{project.datasets[currentDataset].cpuTDPMax}}</p>
         </div>
         <div class="row mt-3">
           <h3>GPU:</h3>
-          <p>RTX 2070</p>
+          <p>{{project.datasets[currentDataset].gpuName}}</p>
         </div>
         <div class="row">
           <h3>Core clock (avg), MHz:</h3>
-          <p>2150</p>
+          <p>{{project.datasets[currentDataset].gpuClockAvg}}</p>
         </div>
         <div class="row">
           <h3>Memory clock (avg), MHz:</h3>
-          <p>1950</p>
+          <p>{{project.datasets[currentDataset].gpuMemoryClockAvg}}</p>
         </div>
         <div class="row">
           <h3>Utilization (avg), %:</h3>
-          <p>99</p>
+          <p>{{project.datasets[currentDataset].gpuUtilizationAvg}}</p>
         </div>
         <div class="row">
           <h3>Temperature (avg/min/max), °C:</h3>
-          <p>70/35/91</p>
+          <p>{{project.datasets[currentDataset].gpuTemperatureAvg}}/{{project.datasets[currentDataset].gpuTemperatureMin}}/{{project.datasets[currentDataset].gpuTemperatureMax}}</p>
         </div>
         <div class="row">
           <h3>Power (avg/min/max), W:</h3>
-          <p>130/75/250</p>
+          <p>{{project.datasets[currentDataset].gpuPowerAvg}}/{{project.datasets[currentDataset].gpuPowerMin}}/{{project.datasets[currentDataset].gpuPowerMax}}</p>
         </div>
         <div class="row mt-3">
           <h3>Average FPS (API/Display):</h3>
-          <p>30/30</p>
+          <p>{{project.datasets[currentDataset].avgFPSAPI.toFixed()}}/{{project.datasets[currentDataset].avgFPSDisplay.toFixed()}}</p>
         </div>
         <div class="row">
           <h3>Modal FPS (API/Display):</h3>
-          <p>35/35</p>
+          <p>{{project.datasets[currentDataset].modeFPSAPI}}/{{project.datasets[currentDataset].modeFPSDisplay}}</p>
         </div>
         <div class="row">
           <h3>50%, FPS (API/Display):</h3>
-          <p>33/32</p>
+          <p>{{project.datasets[currentDataset].statisticsAPI[0]}}/{{project.datasets[currentDataset].statisticsDisplay[0]}}</p>
         </div>
         <div class="row">
           <h3>10%, FPS (API/Display):</h3>
-          <p>19/18</p>
+          <p>{{project.datasets[currentDataset].statisticsAPI[1]}}/{{project.datasets[currentDataset].statisticsDisplay[1]}}</p>
         </div>
         <div class="row">
           <h3>1%, FPS (API/Display):</h3>
-          <p>15/13</p>
+          <p>{{project.datasets[currentDataset].statisticsAPI[2]}}/{{project.datasets[currentDataset].statisticsDisplay[2]}}</p>
         </div>
         <div class="row">
           <h3>0.1%, FPS (API/Display):</h3>
-          <p>12/9</p>
+          <p>{{project.datasets[currentDataset].statisticsAPI[3]}}/{{project.datasets[currentDataset].statisticsDisplay[3]}}</p>
         </div>
         <div class="row mt-3">
           <h3>Battery drain rate (avg/min/max), W:</h3>
-          <p>40/10/65</p>
+          <p>{{project.datasets[currentDataset].batteryDrainRateAvg}}/{{project.datasets[currentDataset].batteryDrainRateMin}}/{{project.datasets[currentDataset].batteryDrainRateMax}}</p>
         </div>
       </div>
       <div class="modal-footer">
@@ -120,25 +120,27 @@
       </div>
       <div class="col-12">
         <div class="dataset-control">
-          <div class="dataset">
-            <input type="checkbox" id="testCheck" />
-            <label>Dataset1</label>
-            <svg data-bs-toggle="modal" data-bs-target="#dataset1" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M11 17h2v-6h-2v6Zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.713T12 7q-.425 0-.713.288T11 8q0 .425.288.713T12 9Zm0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Zm0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20Zm0-8Z" /></svg>
-          </div>
-          <div class="row">
-            <div class="col-6">
-              <button type="button" class="btn">Select all</button>
+          <ng-container *ngIf="project.datasets.length > 0">            
+            <div *ngFor="let set of project.datasets" class="dataset">
+              <input (change)="toggleSelected($event, set)" [checked]="selectedDatasets.includes(project.datasets.indexOf(set))" type="checkbox" id="dataset{{project.datasets.indexOf(set)}}" />
+              <label style="word-wrap:anywhere">{{set.displayName}}</label>
+              <svg (click)="currentDataset = project.datasets.indexOf(set);"  data-bs-toggle="modal" data-bs-target="#dataset1" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M11 17h2v-6h-2v6Zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.713T12 7q-.425 0-.713.288T11 8q0 .425.288.713T12 9Zm0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Zm0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20Zm0-8Z" /></svg>
             </div>
-            <div class="col-6">
-              <button type="button" class="btn">Unselect all</button>
+            <div class="row">
+              <div class="col-6">
+                <button (click)="selectAll()" type="button" class="btn">Select all</button>
+              </div>
+              <div class="col-6">
+                <button (click)="deselectAll()" type="button" class="btn">Unselect all</button>
+              </div>
+              <div class="col-6">
+                <button (click)="invertSelect()" type="button" class="btn">Invert select</button>
+              </div>
+              <div class="col-6">
+                <button (click)="delete()" type="button" class="btn">Delete</button>
+              </div>
             </div>
-            <div class="col-6">
-              <button type="button" class="btn">Invert select</button>
-            </div>
-            <div class="col-6">
-              <button type="button" class="btn">Delete</button>
-            </div>
-          </div>
+          </ng-container>          
           <input type="file" name="name" (change)="fileChangeListener($event)" />
         </div>
       </div>

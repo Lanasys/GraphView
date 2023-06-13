@@ -36,6 +36,9 @@ export class GraphsComponent {
   errorMessage: string;
   dataSource: string;
   chartType: string;
+  currentDataset: number = -1;
+  selectedDatasets: number[] = [];
+
 
   dataSources: { [key: string]: string } = {
     'API': 'Time between calls',
@@ -79,7 +82,6 @@ export class GraphsComponent {
 
   chartTypesArray = Object.keys(this.chartTypes);
 
-
   constructor(private ngxCsvParser: NgxCsvParser, private changeDetectorRef: ChangeDetectorRef) {
     
   }
@@ -110,6 +112,40 @@ export class GraphsComponent {
       });
   }
 
+  toggleSelected(event: any, set: DataSet) {
+    const checked = event.target.checked;
+    if (checked) {
+      this.selectedDatasets.push(this.project.datasets.indexOf(set));
+    } else {
+      const index = this.selectedDatasets.indexOf(this.project.datasets.indexOf(set));
+      if (index !== -1) {
+        this.selectedDatasets.splice(index, 1);
+      }
+    }
+
+    console.log(this.selectedDatasets);
+  }
+
+  selectAll() {
+    this.selectedDatasets = Array.from(this.project.datasets.keys());
+  }
+
+  deselectAll() {
+    this.selectedDatasets = [];
+  }
+
+  invertSelect() {
+    this.selectedDatasets = Array.from(this.project.datasets.keys()).filter(index => !this.selectedDatasets.includes(index));
+  }
+
+  delete() {
+    if (!this.selectedDatasets.length) return;
+    for (let index of this.selectedDatasets) {
+      this.project.datasets.splice(index, 1);
+    }
+    this.selectedDatasets = [];
+  }
+
   buildChart() {
     if (this.project.datasets.length === 0) {
       this.errorMessage = 'No file to read!';
@@ -126,7 +162,7 @@ export class GraphsComponent {
       
       let dataSet: {name: string, data: number[] }[] = [];
       for (let set of this.project.datasets) {
-        dataSet.push({name: set.displayName, data: set.statisticsComparison(isApi) })
+        dataSet.push({ name: set.displayName, data: isApi ? set.statisticsAPI : set.statisticsDisplay })
       }
 
       this.dataOptions = {

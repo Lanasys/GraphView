@@ -84,6 +84,9 @@ export function ProcessData(data: any, fileName: string) {
   dataSet.batteryDrainRateMax = Math.max(...dataSet.batteryDrainRate);
   dataSet.batteryDrainRateMin = Math.min(...dataSet.batteryDrainRate);
 
+  [dataSet.statisticsAPI, dataSet.avgFPSAPI, dataSet.modeFPSAPI] = dataSet.statisticsComparison(true);
+  [dataSet.statisticsDisplay, dataSet.avgFPSDisplay, dataSet.modeFPSDisplay] = dataSet.statisticsComparison(false);
+
   return dataSet;
 }
 
