@@ -4,6 +4,25 @@ import { Project, DataSet } from './models';
 import { ProcessData } from './processData';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 
+import {
+  ChartComponent,
+  ApexAxisChartSeries,
+  ApexChart,
+  ApexXAxis,
+  ApexTitleSubtitle,
+  ApexStroke,
+  ApexYAxis
+} from "ng-apexcharts";
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  title: ApexTitleSubtitle;
+  stroke: ApexStroke;
+  yaxis: ApexYAxis;
+};
+
 @Component({
   selector: 'app-graphs',
   templateUrl: './graphs.component.html',
@@ -12,37 +31,7 @@ import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 
 export class GraphsComponent {
   @ViewChild(ChartViewComponent) chartComponent!: ChartViewComponent;
-  dataOptions = {
-    series: [
-      {
-        name: "Test",
-        data: [10, 22, 22, 23, 43, 54, 69, 43, 2]
-      }
-    ],
-    chart: {
-      width: '100%',
-      type: "line",
-      animations: {
-        enabled: false
-      },
-      toolbar: {
-        tools: {
-          selection: false,
-          zoom: false,
-          zoomin: false,
-          zoomout: false,
-          pan: false,
-          reset: false
-        }
-      }
-    },
-    xaxis: {
-      type: 'numeric'
-    },
-    title: {
-      text: "My First Angular Chart"
-    }
-  };
+  dataOptions: Partial<ChartOptions>;
 
   errorMessage: string;
   dataSource: string;
@@ -134,21 +123,42 @@ export class GraphsComponent {
     let isApi = this.dataSource === 'API';
 
     if (this.chartType === 'statisticsComparison') {
-      //this.chart.updateOptions({
-      //  chart: {
-      //    type: "bar"
-      //  },
-      //  xaxis: {
-      //    type: "categories",
-      //    categories: ["50%", "10%", "1%", "0.1%"]
-      //  }
-      //});
-      let dataSet: { data: number[] }[] = [];
+      
+      let dataSet: {name: string, data: number[] }[] = [];
       for (let set of this.project.datasets) {
-        dataSet.push({ data: set.statisticsComparison(isApi) })
+        dataSet.push({name: set.displayName, data: set.statisticsComparison(isApi) })
       }
 
-      /*this.chart.updateSeries(dataSet);*/
+      this.dataOptions = {
+        series: dataSet,
+        chart: {
+          width: '100%',
+          type: "bar",
+          animations: {
+            enabled: false
+          },
+          toolbar: {
+            tools: {
+              selection: false,
+              zoom: false,
+              zoomin: false,
+              zoomout: false,
+              pan: false,
+              reset: false
+            }
+          }
+        },
+        xaxis: {
+          type: 'category',
+          categories: ['50%', '10%', '1%', '0.1%'],
+          title: {
+            text: this.project.name
+          }
+        },
+        title: {
+          text: this.project.name
+        }
+      }
     }
     else if (this.chartType === 'probabilityDensity') {
       let dataSet: { data: number[] }[] = [];
@@ -157,27 +167,41 @@ export class GraphsComponent {
         dataSet.push({ data: Object.values(set.probabilityDensity(isApi)) })
       }
 
-      //this.chart.updateSeries(dataSet);
-      //this.chart.updateOptions({
-      //  chart: {
-      //    type: 'line'
-      //  },
-      //  stroke: {
-      //    curve: 'smooth'
-      //  },
-      //  yaxis: {
-      //    show: true,
-      //    forceNiceScale: true,
-      //    decimalsInFloat: true
-      //  }
-      //});
-      //this.chart.updateOptions({
-      //  xaxis: {
-      //    type: 'category',
-      //    tickAmount: 4,
-      //    categories: Object.keys(this.project.datasets[0].probabilityDensity(isApi, 2))
-      //  }
-      //});
+      this.dataOptions = {
+        series: dataSet,
+        chart: {
+          type: 'line',
+          animations: {
+            enabled: false
+          },
+          toolbar: {
+            tools: {
+              selection: false,
+              zoom: false,
+              zoomin: false,
+              zoomout: false,
+              pan: false,
+              reset: false
+            }
+          }
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+        yaxis: {
+          show: true,
+          forceNiceScale: true,
+          decimalsInFloat: 0
+        },
+        xaxis: {
+          type: 'numeric',
+          tickAmount: 4,
+          categories: Object.keys(this.project.datasets[0].probabilityDensity(isApi, 2)).map(Number)
+        },
+        title: {
+          text: this.project.name
+        }
+      }
     }
     else if (this.chartType === 'FPS') {
       let dataSet: {name: string, data: number[] }[] = [];
@@ -205,44 +229,29 @@ export class GraphsComponent {
             }
           }
         },
+        stroke: {
+          curve: 'smooth'
+        },
+        yaxis: {
+          show: true,
+          forceNiceScale: true,
+          decimalsInFloat: 2,
+          title: {
+            text: 'FPS'
+          },
+        },
         xaxis: {
-          type: 'numeric'
+          type: 'numeric',
+          tickAmount: 4,
+          decimalsInFloat: 2,
+          title: {
+            text: 'Time'
+          },
         },
         title: {
           text: this.project.name
-        }
+        },
       };
-      setTimeout(() => {
-        this.chartComponent.updateChart();
-      }, 0);
-
-      //this.chart.updateOptions({
-      //  chart: {
-      //    type: 'line'
-      //  },
-      //  stroke: {
-      //    curve: 'smooth'
-      //  },
-      //  yaxis: {
-      //    show: true,
-      //    forceNiceScale: true,
-      //    decimalsInFloat: true,
-      //    title: {
-      //      text: 'FPS'
-      //    },
-      //  }
-      //})
-      //this.chart.updateOptions({
-      //  xaxis: {
-      //    type: 'category',
-      //    tickAmount: 4,
-      //    decimalsInFloat: true,
-      //    title: {
-      //      text: 'Time'
-      //    },
-      //    categories: Object.keys(this.project.datasets[0].FPS(isApi)).map((value) => value = Number(value).toFixed(2))
-      //  }
-      //})
     }
     else if (this.chartType === 'frameTime') {
       let dataSet: { data: number[] }[] = [];
@@ -250,34 +259,52 @@ export class GraphsComponent {
       for (let set of this.project.datasets) {
         dataSet.push({ data: Object.values(set.frameTime(isApi)) })
       }
-      //this.chart.updateSeries(dataSet);
-      //this.chart.updateOptions({
-      //  chart: {
-      //    type: 'line'
-      //  },
-      //  stroke: {
-      //    curve: 'smooth'
-      //  },
-      //  yaxis: {
-      //    show: true,
-      //    forceNiceScale: true,
-      //    decimalsInFloat: true,
-      //    title: {
-      //      text: 'FrameTime'
-      //    },
-      //  }
-      //})
-      //this.chart.updateOptions({
-      //  xaxis: {
-      //    type: 'category',
-      //    tickAmount: 4,
-      //    decimalsInFloat: true,
-      //    title: {
-      //      text: 'Time'
-      //    },
-      //    categories: Object.keys(this.project.datasets[0].frameTime(isApi)).map((value) => value = Number(value).toFixed(2))
-      //  }
-      //})
-    }    
+
+      this.dataOptions = {
+        series: dataSet,
+        chart: {
+          type: 'line',
+          animations: {
+            enabled: false
+          },
+          toolbar: {
+            tools: {
+              selection: false,
+              zoom: false,
+              zoomin: false,
+              zoomout: false,
+              pan: false,
+              reset: false
+            }
+          }
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+        yaxis: {
+          show: true,
+          forceNiceScale: true,
+          decimalsInFloat: 2,
+          title: {
+            text: 'FrameTime'
+          },
+        },
+        xaxis: {
+          type: 'numeric',
+          tickAmount: 4,
+          decimalsInFloat: 2,
+          title: {
+            text: 'Time'
+          },
+          categories: Object.keys(this.project.datasets[0].frameTime(isApi)).map(Number)
+        },
+        title: {
+          text: this.project.name
+        }
+      }
+    }
+    setTimeout(() => {
+      this.chartComponent.updateChart();
+    }, 0);
   }
 }

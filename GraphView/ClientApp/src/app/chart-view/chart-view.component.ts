@@ -5,7 +5,9 @@ import {
   ApexAxisChartSeries,
   ApexChart,
   ApexXAxis,
-  ApexTitleSubtitle
+  ApexTitleSubtitle,
+  ApexStroke,
+  ApexYAxis
 } from "ng-apexcharts";
 
 export type ChartOptions = {
@@ -13,7 +15,10 @@ export type ChartOptions = {
   chart: ApexChart;
   xaxis: ApexXAxis;
   title: ApexTitleSubtitle;
+  stroke: ApexStroke;
+  yaxis: ApexYAxis;
 };
+
 
 @Component({
   selector: 'app-chart-view',

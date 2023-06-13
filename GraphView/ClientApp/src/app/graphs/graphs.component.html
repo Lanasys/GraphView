@@ -1,6 +1,6 @@
 <div class="row">
   <div class="chart-wrapper col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-9 col-xxl-9">
-   <app-chart-view #chartView [options]="dataOptions"></app-chart-view>
+   <app-chart-view #chartView *ngIf="dataOptions" [options]="dataOptions"></app-chart-view>
   </div>
   <div class="col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-3 col-xxl-3">
     <div class="row">
