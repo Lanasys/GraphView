@@ -32,12 +32,22 @@ export function ProcessData(data: any, fileName: string) {
   for (let i = 1; i < data.length; i++) {
     dataSet.time.push(Number(data[i][12] * 1000 - zeroTime));
     dataSet.frameTimePresent.push(Number(data[i][13]));
-    dataSet.frameTimeDisplayChange.push(Number(data[i][14]));
+    if (Number(data[i][14]) != 0) {
+      dataSet.frameTimeDisplayChange.push(Number(data[i][14]));
+      dataSet.timeDisplay.push(Number(data[i][12] * 1000 - zeroTime));
+    }
 
     dataSet.gpuClock.push(Number(data[i][20]));
     dataSet.gpuMemoryClock.push(Number(data[i][21]));
     dataSet.gpuUtilization.push(Number(data[i][22]));
     dataSet.gpuTemperature.push(Number(data[i][23]));
+    if (data[i][35] != "NA") {
+      dataSet.gpuPower.push(Number(data[i][35]));
+    } else if (data[i][36] != "NA") {
+      dataSet.gpuPower.push(Number(data[i][36]));
+    } else {
+      dataSet.gpuPower.push(0);
+    }
     //dataSet.gpuPower.push(data[i][24]); //треба брати із потрібного джерела
 
     dataSet.cpuClock.push(Number(data[i][37]));
@@ -80,6 +90,9 @@ export function ProcessData(data: any, fileName: string) {
   dataSet.batteryDrainRateAvg = calculateMedian(dataSet.batteryDrainRate);
   dataSet.batteryDrainRateMax = Math.max(...dataSet.batteryDrainRate);
   dataSet.batteryDrainRateMin = Math.min(...dataSet.batteryDrainRate);
+
+  [dataSet.statisticsAPI, dataSet.avgFPSAPI, dataSet.modeFPSAPI] = dataSet.statisticsComparison(true);
+  [dataSet.statisticsDisplay, dataSet.avgFPSDisplay, dataSet.modeFPSDisplay] = dataSet.statisticsComparison(false);
 
   return dataSet;
 }

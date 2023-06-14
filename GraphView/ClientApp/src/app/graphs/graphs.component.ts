@@ -1,4 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { ChartViewComponent } from '../chart-view/chart-view.component'
 import { Project, DataSet } from './models';
 import { ProcessData } from './processData';
 import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
@@ -8,18 +9,18 @@ import {
   ApexAxisChartSeries,
   ApexChart,
   ApexXAxis,
-  ApexStroke,
   ApexTitleSubtitle,
+  ApexStroke,
   ApexYAxis
 } from "ng-apexcharts";
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
   chart: ApexChart;
-  yaxis: ApexYAxis;
   xaxis: ApexXAxis;
   title: ApexTitleSubtitle;
-  storke: ApexStroke;
+  stroke: ApexStroke;
+  yaxis: ApexYAxis;
 };
 
 @Component({
@@ -29,12 +30,24 @@ export type ChartOptions = {
 })
 
 export class GraphsComponent {
-  @ViewChild("chart") chart: ChartComponent;
-  public chartOptions: Partial<ChartOptions> | any;
-
+  @ViewChild(ChartViewComponent) chartComponent!: ChartViewComponent;
+  dataOptions: Partial<ChartOptions>;
+  project: Project = new Project();
   errorMessage: string;
   dataSource: string;
   chartType: string;
+  currentDataset: number = -1;
+  selectedDatasets: number[] = [];
+  datasetDetails: { displayName: string, resolution: string} = {
+    displayName: '',
+    resolution: ''
+  };
+
+  selectDataset(index: number) {
+    this.currentDataset = index;
+    this.datasetDetails.displayName = this.project.datasets[index].displayName;
+    this.datasetDetails.resolution = this.project.datasets[index].resolution;
+  }
 
   dataSources: { [key: string]: string } = {
     'API': 'Time between calls',
@@ -76,45 +89,11 @@ export class GraphsComponent {
     }
   };
 
-chartTypesArray = Object.keys(this.chartTypes);
+  chartTypesArray = Object.keys(this.chartTypes);
 
+  constructor(private ngxCsvParser: NgxCsvParser, private changeDetectorRef: ChangeDetectorRef) {
 
-  constructor(private ngxCsvParser: NgxCsvParser) {
-    this.chartOptions = {
-      series: [
-        {
-          name: "My-series",
-          data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-        }
-      ],
-      chart: {
-        height: 'auto',
-        width: '100%',
-        type: "line",
-        animations: {
-          enabled: false
-        },
-        toolbar: {
-          tools: {
-            selection: false,
-            zoom: false,
-            zoomin: false,
-            zoomout: false,
-            pan: false,
-            reset: false
-          }
-        }
-      },
-      xaxis: {
-        type: 'numeric'
-      },
-      title: {
-        text: "My First Angular Chart"
-      }
-    };
   }
-
-  project: Project = new Project();
 
   csvRecords: any;
   header: boolean = false;
@@ -140,6 +119,43 @@ chartTypesArray = Object.keys(this.chartTypes);
       });
   }
 
+  toggleSelected(event: any, set: DataSet) {
+    const checked = event.target.checked;
+    if (checked) {
+      this.selectedDatasets.push(this.project.datasets.indexOf(set));
+    } else {
+      const index = this.selectedDatasets.indexOf(this.project.datasets.indexOf(set));
+      if (index !== -1) {
+        this.selectedDatasets.splice(index, 1);
+      }
+    }
+
+    console.log(this.selectedDatasets);
+  }
+
+  selectAll() {
+    this.selectedDatasets = Array.from(this.project.datasets.keys());
+  }
+
+  deselectAll() {
+    this.selectedDatasets = [];
+  }
+
+  invertSelect() {
+    this.selectedDatasets = Array.from(this.project.datasets.keys()).filter(index => !this.selectedDatasets.includes(index));
+  }
+
+  delete() {
+    if (!this.selectedDatasets.length) return;
+    this.project.datasets = this.project.datasets.filter((_, index) => !this.selectedDatasets.includes(index));
+    this.selectedDatasets = [];
+  }
+
+  saveDataSetDetails() {
+    this.project.datasets[this.currentDataset].displayName = this.datasetDetails.displayName;
+    this.project.datasets[this.currentDataset].resolution = this.datasetDetails.resolution;
+  }
+
   buildChart() {
     if (this.project.datasets.length === 0) {
       this.errorMessage = 'No file to read!';
@@ -151,63 +167,80 @@ chartTypesArray = Object.keys(this.chartTypes);
     }
 
     let isApi = this.dataSource === 'API';
+    const data: DataSet[] = this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
+
+    if (data.length === 0) {
+      return;
+    }
+
+    let theLongestSetIndex: number = 0;
 
     if (this.chartType === 'statisticsComparison') {
-      this.chart.updateOptions({
-        chart: {
-          type: "bar"
-        },
-        xaxis: {
-          type: "categories",
-          categories: ["50%", "10%", "1%", "0.1%"]
-        }
-      });
-      let dataSet: { data: number[] }[] = [];
-      for (let set of this.project.datasets) {
-        dataSet.push({ data: set.statisticsComparison(isApi) })
+
+      let dataSet: {name: string, data: number[] }[] = [];
+      for (let set of data) {
+        dataSet.push({ name: set.displayName, data: isApi ? set.statisticsAPI : set.statisticsDisplay })
       }
 
-      this.chart.updateSeries(dataSet);
-    }
-    else if (this.chartType === 'probabilityDensity') {
-      let dataSet: { data: number[] }[] = [];
-
-      for (let set of this.project.datasets) {
-        dataSet.push({ data: Object.values(set.probabilityDensity(isApi)) })
-      }
-
-      this.chart.updateSeries(dataSet);
-      this.chart.updateOptions({
+      this.dataOptions = {
+        series: dataSet,
         chart: {
-          type: 'line'
+          width: '100%',
+          type: "bar",
+          animations: {
+            enabled: false
+          },
+          toolbar: {
+            tools: {
+              selection: false,
+              zoom: false,
+              zoomin: false,
+              zoomout: false,
+              pan: false,
+              reset: false
+            }
+          }
         },
-        stroke: {
-          curve: 'smooth'
-        },
-        yaxis: {
-          show: true,
-          forceNiceScale: true,
-          decimalsInFloat: true
-        }
-      });
-      this.chart.updateOptions({
         xaxis: {
           type: 'category',
-          tickAmount: 4,
-          categories: Object.keys(this.project.datasets[0].probabilityDensity(isApi, 2))
+          categories: ['50%', '10%', '1%', '0.1%'],
+          title: {
+            text: this.project.name
+          }
+        },
+        title: {
+          text: this.project.name
         }
-      });
-    }
-    else if (this.chartType === 'FPS') {
-      let dataSet: { data: number[] }[] = [];
-
-      for (let set of this.project.datasets) {
-        dataSet.push({ data: Object.values(set.FPS(isApi)) })
       }
-      this.chart.updateSeries(dataSet);
-      this.chart.updateOptions({
+    }
+    else if (this.chartType === 'probabilityDensity') {
+      let dataSet: { name: string, data: number[] }[] = [];
+      let setToGraph: number[];
+      for (let set of data) {
+        setToGraph = Object.values(set.probabilityDensity(isApi));
+        dataSet.push({ name: set.displayName, data: setToGraph })
+        if (setToGraph.length >= dataSet[theLongestSetIndex].data.length) {
+          theLongestSetIndex = data.indexOf(set);
+        }
+      }
+
+      this.dataOptions = {
+        series: dataSet,
         chart: {
-          type: 'line'
+          type: 'line',
+          animations: {
+            enabled: false
+          },
+          toolbar: {
+            tools: {
+              selection: false,
+              zoom: false,
+              zoomin: false,
+              zoomout: false,
+              pan: false,
+              reset: false
+            }
+          }
         },
         stroke: {
           curve: 'smooth'
@@ -215,34 +248,103 @@ chartTypesArray = Object.keys(this.chartTypes);
         yaxis: {
           show: true,
           forceNiceScale: true,
-          decimalsInFloat: true,
+          decimalsInFloat: 0
+        },
+        xaxis: {
+          type: 'numeric',
+          tickAmount: 4,
+          categories: Object.keys(data[theLongestSetIndex].probabilityDensity(isApi, 2)).map(Number)
+        },
+        title: {
+          text: this.project.name
+        }
+      }
+    }
+    else if (this.chartType === 'FPS') {
+      let dataSet: {name: string, data: number[] }[] = [];
+      let setToGraph: number[];
+
+      for (let set of data) {
+        setToGraph = Object.values(set.FPS(isApi));
+        dataSet.push({name: set.displayName, data: setToGraph });
+        if (setToGraph.length >= dataSet[theLongestSetIndex].data.length) {
+          theLongestSetIndex = data.indexOf(set);
+        }
+      }
+
+      this.dataOptions = {
+        series: dataSet,
+        chart: {
+          width: '100%',
+          type: "line",
+          animations: {
+            enabled: false
+          },
+          toolbar: {
+            tools: {
+              selection: false,
+              zoom: false,
+              zoomin: false,
+              zoomout: false,
+              pan: false,
+              reset: false
+            }
+          }
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+        yaxis: {
+          show: true,
+          forceNiceScale: true,
+          decimalsInFloat: 2,
           title: {
             text: 'FPS'
           },
-        }
-      })
-      this.chart.updateOptions({
+        },
         xaxis: {
-          type: 'category',
+          type: 'numeric',
           tickAmount: 4,
-          decimalsInFloat: true,
+          decimalsInFloat: 2,
           title: {
-            text: 'Time'
+            text: 'Time, ms'
           },
-          categories: Object.keys(this.project.datasets[0].FPS(isApi)).map((value) => value = Number(value).toFixed(2))
-        }
-      })
+          categories: Object.keys(data[theLongestSetIndex].FPS(isApi)).map(Number).sort((a, b) => a - b)
+        },
+        title: {
+          text: this.project.name
+        },
+      };
     }
     else if (this.chartType === 'frameTime') {
-      let dataSet: { data: number[] }[] = [];
+      let dataSet: {name: string, data: number[] }[] = [];
+      let setToGraph: number[];
 
-      for (let set of this.project.datasets) {
-        dataSet.push({ data: Object.values(set.frameTime(isApi)) })
+      for (let set of data) {
+        setToGraph = Object.values(set.frameTime(isApi));
+        dataSet.push({name: set.displayName, data: setToGraph });
+        if (setToGraph.length >= dataSet[theLongestSetIndex].data.length) {
+          theLongestSetIndex = data.indexOf(set);
+        }
       }
-      this.chart.updateSeries(dataSet);
-      this.chart.updateOptions({
+
+      this.dataOptions = {
+        series: dataSet,
         chart: {
-          type: 'line'
+          type: 'line',
+          animations: {
+            enabled: false
+          },
+          toolbar: {
+            tools: {
+              selection: false,
+              zoom: false,
+              zoomin: false,
+              zoomout: false,
+              pan: false,
+              reset: false
+            }
+          }
         },
         stroke: {
           curve: 'smooth'
@@ -250,23 +352,27 @@ chartTypesArray = Object.keys(this.chartTypes);
         yaxis: {
           show: true,
           forceNiceScale: true,
-          decimalsInFloat: true,
+          decimalsInFloat: 2,
           title: {
-            text: 'FrameTime'
+            text: 'FrameTime, ms'
           },
-        }
-      })
-      this.chart.updateOptions({
+        },
         xaxis: {
-          type: 'category',
+          type: 'numeric',
           tickAmount: 4,
-          decimalsInFloat: true,
+          decimalsInFloat: 2,
           title: {
-            text: 'Time'
+            text: 'Time, ms'
           },
-          categories: Object.keys(this.project.datasets[0].frameTime(isApi)).map((value) => value = Number(value).toFixed(2))
+          categories: Object.keys(data[theLongestSetIndex].frameTime(isApi)).map(Number).sort((a, b) => a - b)
+        },
+        title: {
+          text: this.project.name
         }
-      })
+      }
     }
+    setTimeout(() => {
+      this.chartComponent.updateChart();
+    }, 0);
   }
 }

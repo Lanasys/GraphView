@@ -9,6 +9,7 @@
 }
 
 .chart-wrapper {
+  padding: 0px;
 }
 
 .options-group {
@@ -16,7 +17,11 @@
   border: 1px solid $primary-color;
   border-radius: 5px;
   color: $primary-color;
+  transition: 0.1s all linear;
 
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
 
   .options-group-title {
     display: flex;
@@ -38,7 +43,11 @@
       margin-bottom: 0px;
 
       span {
-        font-weight: 400;
+        @include H4-mob;
+
+        @media (min-width: $main-bp) {
+          @include H4;
+        }
       }
     }
   }
@@ -48,6 +57,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-top: 5px;
 
     input[type="radio"] {
       appearance: none;
@@ -66,9 +76,140 @@
 
     label {
       cursor: pointer;
+      @include H4-mob;
 
       &:hover {
         text-decoration: underline;
+      }
+
+      @media (min-width: $main-bp) {
+        @include H4;
+      }
+    }
+  }
+}
+
+.dataset-control {
+  padding: 10px;
+  border: 1px solid $primary-color;
+  border-radius: 5px;
+
+  & > * {
+    margin-bottom: 10px;
+  }
+
+  & > *:last-child {
+    margin-bottom: 0px;
+  }
+
+  .dataset {
+    padding: 5px;
+    height: 34px;
+    border: 1px solid $primary-color;
+    border-radius: 5px;
+    background-color: $tertiary-color;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+
+    input[type="checkbox"] {
+      appearance: none;
+      border-radius: 10%;
+      width: 16px;
+      height: 16px;
+      border: 1px solid $primary-color;
+      transition: 0.1s all linear;
+      position: relative;
+      cursor: pointer;
+
+      &:checked {
+        border: 8px solid $secondary-color;
+      }
+    }
+
+    label {
+      margin-left: 10px;
+      overflow: hidden;
+      width: calc(100% - 50px);
+
+      @include H4-mob;
+
+      @media (min-width: $main-bp) {
+        @include H4;
+      }
+    }
+
+    svg {
+      margin-left: auto;
+    }
+  }
+}
+
+.modal-body {
+  .row {
+    justify-content: space-between;
+
+    & > * {
+      width: auto;
+      margin: 5px;
+    }
+
+    &:first-child > * {
+      margin-top: 0px;
+    }
+
+    &:last-child > * {
+      margin-bottom: 0px;
+    }
+
+    h3 {
+      @include H3-mob;
+
+      @media (min-width: $main-bp) {
+        @include H3;
+      }
+    }
+
+    p {
+      @include H4-mob;
+
+      @media (min-width: $main-bp) {
+        @include H4;
+      }
+    }
+
+    p.file-name {
+      word-wrap: anywhere;
+      width: 70%;
+      text-align: end;
+    }
+
+    input {
+      width: 300px;
+      height: 17px;
+      padding: 4px;
+      background-color: transparent;
+      border: none;
+      text-align: end;
+      @include H4-mob;
+      color: $primary-color;
+      border: 1px solid $body-color;
+      border-radius: 3px;
+
+      &:focus {
+        outline: none;
+        border: 1px solid $primary-color;
+        background-color: $tertiary-color;
+      }
+
+      @media (min-width: $main-bp) {
+        height: 19px;
+        @include H4;
       }
     }
   }

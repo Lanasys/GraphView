@@ -19,6 +19,7 @@ export class DataSet {
   cpuName: string; //CPU
 
   time: number[] = []; //TimeInSeconds
+  timeDisplay: number[] = []; //TimeInSeconds
   frameTimePresent: number[] = []; //MsBetweenPresents
   frameTimeDisplayChange: number[] = []; //MsBetweenDisplayChange
 
@@ -32,7 +33,7 @@ export class DataSet {
   gpuTemperatureAvg: number;
   gpuTemperatureMax: number;
   gpuTemperatureMin: number;
-  gpuPower: number[] = []; //PCAT Power Total, GPUOnlyPwr(W) (API), NV Pwr(W) (API), AMDPwr(W) (API)
+  gpuPower: number[] = []; //NV Pwr(W) (API), AMDPwr(W) (API)
   gpuPowerAvg: number;
   gpuPowerMax: number;
   gpuPowerMin: number;
@@ -61,8 +62,14 @@ export class DataSet {
   batteryDrainRateMax: number;
   batteryDrainRateMin: number;
 
+  avgFPSAPI: number;
+  avgFPSDisplay: number;
+  modeFPSAPI: number;
+  modeFPSDisplay: number;
+  statisticsAPI: number[];
+  statisticsDisplay: number[];
 
-  public statisticsComparison(isApi: boolean): number[] {
+  public statisticsComparison(isApi: boolean): [number[], number, number] {
     let FPS: number[];
     if (isApi) {
       FPS = this.frameTimePresent.map((element: number) => Math.round(1000 / element));
@@ -109,7 +116,17 @@ export class DataSet {
     let res: number[] = [];
     res.push(pc50, pc10, pc1, pc01);
 
-    return res;
+    for (const key in Count) {
+      if (Count.hasOwnProperty(key)) {
+        const value = Count[key];
+        if (value > countModeFPS) {
+          modeFPS = Number(key);
+          countModeFPS = value;
+        }
+      }
+    }
+    
+    return [res, avgFPS, modeFPS];
   }
 
   public probabilityDensity(isApi: boolean, eps: number = 2): { [key: number]: number } {
@@ -120,14 +137,11 @@ export class DataSet {
     else {
       FPS = this.frameTimeDisplayChange.map((element: number) => Number(Math.round(1000 / element).toFixed(eps)));
     }
-    // console.log(FPS);
-    // console.log(Math.max(...FPS));
     let probability: { [key: number]: number } = FPS.reduce((acc: any, item: number) => {
       acc[item] = (acc[item] || 0) + 1;
       return acc;
     }, {});
 
-    //console.log(probability);
     Object.keys(probability).forEach((key) => {
       probability[Number(key)] = probability[Number(key)] * 100 / FPS.length;
     });
@@ -135,23 +149,36 @@ export class DataSet {
   }
 
   public FPS(isApi: boolean): { [key: number]: number } {
-    let FPS: number[];
+    const FPS: number[] = isApi ? this.frameTimePresent.map((element: number) => Math.round(1000 / element)) : this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
+
+    const result: { [key: number]: number } = {};
     if (isApi) {
-      FPS = this.frameTimePresent.map((element: number) => Math.round(1000 / element));
-    }
-    else {
-      FPS = this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
+      for (let i = 0; i < this.time.length; i++) {
+        result[this.time[i]] = FPS[i];
+      }
+    } else {
+      for (let i = 0; i < this.timeDisplay.length; i++) {
+        result[this.timeDisplay[i]] = FPS[i];
+      }
     }
 
-    return this.time.reduce((o, k, i) => ({ ...o, [k]: FPS[i] }), {})
+    return result;
   }
 
+
   public frameTime(isApi: boolean) {
+    const result: { [key: number]: number } = {};
+
     if (isApi) {
-      return this.time.reduce((o, k, i) => ({ ...o, [k]: this.frameTimePresent[i] }), {});
+      for (let i = 0; i < this.time.length; i++) {
+        result[this.time[i]] = this.frameTimePresent[i];
+      }
+    } else {
+      for (let i = 0; i < this.timeDisplay.length; i++) {
+        result[this.timeDisplay[i]] = this.frameTimeDisplayChange[i];
+      }
     }
-    else {
-      return this.time.reduce((o, k, i) => ({ ...o, [k]: this.frameTimeDisplayChange[i] }), {})
-    }
+
+    return result;
   }
 }

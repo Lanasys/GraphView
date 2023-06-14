@@ -1,20 +1,150 @@
+<div class="modal fade" id="dataset1" tabindex="-1" aria-labelledby="dataset1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">All info</h5>
+      </div>
+      <div *ngIf="currentDataset !== -1" class="modal-body">
+        <div class="row">
+          <h3>File name:</h3>
+          <p class="file-name">{{project.datasets[currentDataset].name}}</p>
+        </div>
+        <div class="row">
+          <h3>Name (editable):</h3>
+          <input type="text" name="" maxlength="30" [(ngModel)]="datasetDetails.displayName" />
+        </div>
+        <div class="row mt-3">
+          <h3>Application name:</h3>
+          <p>{{project.datasets[currentDataset].applicationName}}</p>
+        </div>
+        <div class="row">
+          <h3>API:</h3>
+          <p>{{project.datasets[currentDataset].runtime}}</p>
+        </div>
+        <div class="row">
+          <h3>Resolution (editable):</h3>
+          <input type="text" name="" maxlength="9" [(ngModel)]="datasetDetails.resolution" />
+        </div>
+        <div class="row mt-3">
+          <h3>CPU:</h3>
+          <p>{{project.datasets[currentDataset].cpuName}}</p>
+        </div>
+        <div class="row">
+          <h3>Clock (avg), MHz:</h3>
+          <p>{{project.datasets[currentDataset].cpuClockAvg}}</p>
+        </div>
+        <div class="row">
+          <h3>Utilization (avg), %:</h3>
+          <p>{{project.datasets[currentDataset].cpuUtilizationAvg}}</p>
+        </div>
+        <div class="row">
+          <h3>Temperature (avg/min/max), °C:</h3>
+          <p>{{project.datasets[currentDataset].cpuTemperatureAvg}}/{{project.datasets[currentDataset].cpuTemperatureMin}}/{{project.datasets[currentDataset].cpuTemperatureMax}}</p>
+        </div>
+        <div class="row">
+          <h3>Power (avg/min/max), W:</h3>
+          <p>{{project.datasets[currentDataset].cpuPowerAvg.toFixed()}}/{{project.datasets[currentDataset].cpuPowerMin.toFixed()}}/{{project.datasets[currentDataset].cpuPowerMax.toFixed()}}</p>
+        </div>
+        <div class="row">
+          <h3>TDP (min/max), W:</h3>
+          <p>{{project.datasets[currentDataset].cpuTDPMin}}/{{project.datasets[currentDataset].cpuTDPMax}}</p>
+        </div>
+        <div class="row mt-3">
+          <h3>GPU:</h3>
+          <p>{{project.datasets[currentDataset].gpuName}}</p>
+        </div>
+        <div class="row">
+          <h3>Core clock (avg), MHz:</h3>
+          <p>{{project.datasets[currentDataset].gpuClockAvg}}</p>
+        </div>
+        <div class="row">
+          <h3>Memory clock (avg), MHz:</h3>
+          <p>{{project.datasets[currentDataset].gpuMemoryClockAvg}}</p>
+        </div>
+        <div class="row">
+          <h3>Utilization (avg), %:</h3>
+          <p>{{project.datasets[currentDataset].gpuUtilizationAvg}}</p>
+        </div>
+        <div class="row">
+          <h3>Temperature (avg/min/max), °C:</h3>
+          <p>{{project.datasets[currentDataset].gpuTemperatureAvg}}/{{project.datasets[currentDataset].gpuTemperatureMin}}/{{project.datasets[currentDataset].gpuTemperatureMax}}</p>
+        </div>
+        <div class="row">
+          <h3>Power (avg/min/max), W:</h3>
+          <p>{{project.datasets[currentDataset].gpuPowerAvg.toFixed()}}/{{project.datasets[currentDataset].gpuPowerMin.toFixed()}}/{{project.datasets[currentDataset].gpuPowerMax.toFixed()}}</p>
+        </div>
+        <div class="row mt-3">
+          <h3>Average FPS (API/Display):</h3>
+          <p>{{project.datasets[currentDataset].avgFPSAPI.toFixed()}}/{{project.datasets[currentDataset].avgFPSDisplay.toFixed()}}</p>
+        </div>
+        <div class="row">
+          <h3>Modal FPS (API/Display):</h3>
+          <p>{{project.datasets[currentDataset].modeFPSAPI}}/{{project.datasets[currentDataset].modeFPSDisplay}}</p>
+        </div>
+        <div class="row">
+          <h3>50%, FPS (API/Display):</h3>
+          <p>{{project.datasets[currentDataset].statisticsAPI[0]}}/{{project.datasets[currentDataset].statisticsDisplay[0]}}</p>
+        </div>
+        <div class="row">
+          <h3>10%, FPS (API/Display):</h3>
+          <p>{{project.datasets[currentDataset].statisticsAPI[1]}}/{{project.datasets[currentDataset].statisticsDisplay[1]}}</p>
+        </div>
+        <div class="row">
+          <h3>1%, FPS (API/Display):</h3>
+          <p>{{project.datasets[currentDataset].statisticsAPI[2]}}/{{project.datasets[currentDataset].statisticsDisplay[2]}}</p>
+        </div>
+        <div class="row">
+          <h3>0.1%, FPS (API/Display):</h3>
+          <p>{{project.datasets[currentDataset].statisticsAPI[3]}}/{{project.datasets[currentDataset].statisticsDisplay[3]}}</p>
+        </div>
+        <div class="row mt-3">
+          <h3>Battery drain rate (avg/min/max), W:</h3>
+          <p>{{project.datasets[currentDataset].batteryDrainRateAvg}}/{{project.datasets[currentDataset].batteryDrainRateMin}}/{{project.datasets[currentDataset].batteryDrainRateMax}}</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-bs-dismiss="modal">Close</button>
+        <button (click)="saveDataSetDetails()" type="button" class="btn">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="row">
   <div class="chart-wrapper col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-9 col-xxl-9">
-    <div id="chart" style="text-align:center">
-      <apx-chart #chart [series]="chartOptions.series"
-                 [chart]="chartOptions.chart"
-                 [xaxis]="chartOptions.xaxis"
-                 [stroke]="chartOptions.stroke"
-                 [yaxis]="chartOptions.yaxis"
-                 [title]="chartOptions.title"></apx-chart>
-    </div>
+    <app-chart-view #chartView *ngIf="dataOptions" [options]="dataOptions"></app-chart-view>
   </div>
   <div class="col-xs-0 col-sm-12 col-md-12 col-lg-12 col-xl-3 col-xxl-3">
     <div class="row">
-      <button id="#btnDraw" type="button" (click)="buildChart()">Draw</button>
-    </div>
-    <div class="row">
-      <input type="file" name="name" (change)="fileChangeListener($event)" />
+      <div class="col-12">
+        <button class="btn" id="#btnDraw" type="button" (click)="buildChart()">Draw</button>
+      </div>
+      <div class="col-12">
+        <div class="dataset-control">
+          <ng-container *ngIf="project.datasets.length > 0">
+            <div *ngFor="let set of project.datasets" class="dataset">
+              <input (change)="toggleSelected($event, set)" [checked]="selectedDatasets.includes(project.datasets.indexOf(set))" type="checkbox" id="dataset{{project.datasets.indexOf(set)}}" />
+              <label>{{set.displayName}}</label>
+              <svg (click)="selectDataset(project.datasets.indexOf(set))"  data-bs-toggle="modal" data-bs-target="#dataset1" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M11 17h2v-6h-2v6Zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.713T12 7q-.425 0-.713.288T11 8q0 .425.288.713T12 9Zm0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Zm0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20Zm0-8Z" /></svg>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <button (click)="selectAll()" type="button" class="btn">Select all</button>
+              </div>
+              <div class="col-6">
+                <button (click)="deselectAll()" type="button" class="btn">Unselect all</button>
+              </div>
+              <div class="col-6">
+                <button (click)="invertSelect()" type="button" class="btn">Invert selected</button>
+              </div>
+              <div class="col-6">
+                <button (click)="delete()" type="button" class="btn">Delete selected</button>
+              </div>
+            </div>
+          </ng-container>
+          <input type="file" name="name" (change)="fileChangeListener($event)" />
+        </div>
+      </div>
+
     </div>
     <div class="row">
       <div class="col-12">
