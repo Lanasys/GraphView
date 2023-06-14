@@ -11,7 +11,7 @@
         </div>
         <div class="row">
           <h3>Name (editable):</h3>
-          <input type="text" name="" value="{{project.datasets[currentDataset].name}}" />
+          <input type="text" name="" maxlength="30" [(ngModel)]="datasetDetails.displayName" />
         </div>
         <div class="row mt-3">
           <h3>Application name:</h3>
@@ -23,7 +23,7 @@
         </div>
         <div class="row">
           <h3>Resolution (editable):</h3>
-          <input type="text" name="" value="{{project.datasets[currentDataset].resolution}}" />
+          <input type="text" name="" maxlength="9" [(ngModel)]="datasetDetails.resolution" />
         </div>
         <div class="row mt-3">
           <h3>CPU:</h3>
@@ -104,7 +104,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn">Save changes</button>
+        <button (click)="saveDataSetDetails()" type="button" class="btn">Save changes</button>
       </div>
     </div>
   </div>
@@ -120,11 +120,11 @@
       </div>
       <div class="col-12">
         <div class="dataset-control">
-          <ng-container *ngIf="project.datasets.length > 0">            
+          <ng-container *ngIf="project.datasets.length > 0">
             <div *ngFor="let set of project.datasets" class="dataset">
               <input (change)="toggleSelected($event, set)" [checked]="selectedDatasets.includes(project.datasets.indexOf(set))" type="checkbox" id="dataset{{project.datasets.indexOf(set)}}" />
               <label>{{set.displayName}}</label>
-              <svg (click)="currentDataset = project.datasets.indexOf(set);"  data-bs-toggle="modal" data-bs-target="#dataset1" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M11 17h2v-6h-2v6Zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.713T12 7q-.425 0-.713.288T11 8q0 .425.288.713T12 9Zm0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Zm0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20Zm0-8Z" /></svg>
+              <svg (click)="selectDataset(project.datasets.indexOf(set))"  data-bs-toggle="modal" data-bs-target="#dataset1" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M11 17h2v-6h-2v6Zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.713T12 7q-.425 0-.713.288T11 8q0 .425.288.713T12 9Zm0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Zm0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20Zm0-8Z" /></svg>
             </div>
             <div class="row">
               <div class="col-6">
@@ -140,7 +140,7 @@
                 <button (click)="delete()" type="button" class="btn">Delete selected</button>
               </div>
             </div>
-          </ng-container>          
+          </ng-container>
           <input type="file" name="name" (change)="fileChangeListener($event)" />
         </div>
       </div>

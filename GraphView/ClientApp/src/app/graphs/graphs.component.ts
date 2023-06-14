@@ -32,13 +32,22 @@ export type ChartOptions = {
 export class GraphsComponent {
   @ViewChild(ChartViewComponent) chartComponent!: ChartViewComponent;
   dataOptions: Partial<ChartOptions>;
-
+  project: Project = new Project();
   errorMessage: string;
   dataSource: string;
   chartType: string;
   currentDataset: number = -1;
   selectedDatasets: number[] = [];
+  datasetDetails: { displayName: string, resolution: string} = {
+    displayName: '',
+    resolution: ''
+  };
 
+  selectDataset(index: number) {
+    this.currentDataset = index;
+    this.datasetDetails.displayName = this.project.datasets[index].displayName;
+    this.datasetDetails.resolution = this.project.datasets[index].resolution;
+  }
 
   dataSources: { [key: string]: string } = {
     'API': 'Time between calls',
@@ -83,10 +92,8 @@ export class GraphsComponent {
   chartTypesArray = Object.keys(this.chartTypes);
 
   constructor(private ngxCsvParser: NgxCsvParser, private changeDetectorRef: ChangeDetectorRef) {
-    
-  }
 
-  project: Project = new Project();
+  }
 
   csvRecords: any;
   header: boolean = false;
@@ -144,6 +151,11 @@ export class GraphsComponent {
     this.selectedDatasets = [];
   }
 
+  saveDataSetDetails() {
+    this.project.datasets[this.currentDataset].displayName = this.datasetDetails.displayName;
+    this.project.datasets[this.currentDataset].resolution = this.datasetDetails.resolution;
+  }
+
   buildChart() {
     if (this.project.datasets.length === 0) {
       this.errorMessage = 'No file to read!';
@@ -155,11 +167,18 @@ export class GraphsComponent {
     }
 
     let isApi = this.dataSource === 'API';
+    const data: DataSet[] = this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
+
+    if (data.length === 0) {
+      return;
+    }
+
+    let theLongestSetIndex: number = 0;
 
     if (this.chartType === 'statisticsComparison') {
-      
+
       let dataSet: {name: string, data: number[] }[] = [];
-      for (let set of this.project.datasets) {
+      for (let set of data) {
         dataSet.push({ name: set.displayName, data: isApi ? set.statisticsAPI : set.statisticsDisplay })
       }
 
@@ -195,10 +214,14 @@ export class GraphsComponent {
       }
     }
     else if (this.chartType === 'probabilityDensity') {
-      let dataSet: { data: number[] }[] = [];
-
-      for (let set of this.project.datasets) {
-        dataSet.push({ data: Object.values(set.probabilityDensity(isApi)) })
+      let dataSet: { name: string, data: number[] }[] = [];
+      let setToGraph: number[];
+      for (let set of data) {
+        setToGraph = Object.values(set.probabilityDensity(isApi));
+        dataSet.push({ name: set.displayName, data: setToGraph })
+        if (setToGraph.length >= dataSet[theLongestSetIndex].data.length) {
+          theLongestSetIndex = data.indexOf(set);
+        }
       }
 
       this.dataOptions = {
@@ -230,7 +253,7 @@ export class GraphsComponent {
         xaxis: {
           type: 'numeric',
           tickAmount: 4,
-          categories: Object.keys(this.project.datasets[0].probabilityDensity(isApi, 2)).map(Number)
+          categories: Object.keys(data[theLongestSetIndex].probabilityDensity(isApi, 2)).map(Number)
         },
         title: {
           text: this.project.name
@@ -239,9 +262,14 @@ export class GraphsComponent {
     }
     else if (this.chartType === 'FPS') {
       let dataSet: {name: string, data: number[] }[] = [];
+      let setToGraph: number[];
 
-      for (let set of this.project.datasets) {
-        dataSet.push({name: set.displayName, data: Object.values(set.FPS(isApi)) })
+      for (let set of data) {
+        setToGraph = Object.values(set.FPS(isApi));
+        dataSet.push({name: set.displayName, data: setToGraph });
+        if (setToGraph.length >= dataSet[theLongestSetIndex].data.length) {
+          theLongestSetIndex = data.indexOf(set);
+        }
       }
 
       this.dataOptions = {
@@ -281,6 +309,7 @@ export class GraphsComponent {
           title: {
             text: 'Time, ms'
           },
+          categories: Object.keys(data[theLongestSetIndex].FPS(isApi)).map(Number).sort((a, b) => a - b)
         },
         title: {
           text: this.project.name
@@ -289,9 +318,14 @@ export class GraphsComponent {
     }
     else if (this.chartType === 'frameTime') {
       let dataSet: {name: string, data: number[] }[] = [];
+      let setToGraph: number[];
 
-      for (let set of this.project.datasets) {
-        dataSet.push({name: set.displayName, data: Object.values(set.frameTime(isApi)) })
+      for (let set of data) {
+        setToGraph = Object.values(set.frameTime(isApi));
+        dataSet.push({name: set.displayName, data: setToGraph });
+        if (setToGraph.length >= dataSet[theLongestSetIndex].data.length) {
+          theLongestSetIndex = data.indexOf(set);
+        }
       }
 
       this.dataOptions = {
@@ -330,7 +364,7 @@ export class GraphsComponent {
           title: {
             text: 'Time, ms'
           },
-          categories: Object.keys(this.project.datasets[0].frameTime(isApi)).map(Number).sort((a, b) => a - b)
+          categories: Object.keys(data[theLongestSetIndex].frameTime(isApi)).map(Number).sort((a, b) => a - b)
         },
         title: {
           text: this.project.name
