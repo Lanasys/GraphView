@@ -188,5 +188,29 @@
       width: 70%;
       text-align: end;
     }
+
+    input {
+      width: 300px;
+      height: 17px;
+      padding: 4px;
+      background-color: transparent;
+      border: none;
+      text-align: end;
+      @include H4-mob;
+      color: $primary-color;
+      border: 1px solid $body-color;
+      border-radius: 3px;
+
+      &:focus {
+        outline: none;
+        border: 1px solid $primary-color;
+        background-color: $tertiary-color;
+      }
+
+      @media (min-width: $main-bp) {
+        height: 19px;
+        @include H4;
+      }
+    }
   }
 }

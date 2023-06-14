@@ -33,7 +33,7 @@ export class DataSet {
   gpuTemperatureAvg: number;
   gpuTemperatureMax: number;
   gpuTemperatureMin: number;
-  gpuPower: number[] = []; //PCAT Power Total, GPUOnlyPwr(W) (API), NV Pwr(W) (API), AMDPwr(W) (API)
+  gpuPower: number[] = []; //NV Pwr(W) (API), AMDPwr(W) (API)
   gpuPowerAvg: number;
   gpuPowerMax: number;
   gpuPowerMin: number;
@@ -137,14 +137,11 @@ export class DataSet {
     else {
       FPS = this.frameTimeDisplayChange.map((element: number) => Number(Math.round(1000 / element).toFixed(eps)));
     }
-    // console.log(FPS);
-    // console.log(Math.max(...FPS));
     let probability: { [key: number]: number } = FPS.reduce((acc: any, item: number) => {
       acc[item] = (acc[item] || 0) + 1;
       return acc;
     }, {});
 
-    //console.log(probability);
     Object.keys(probability).forEach((key) => {
       probability[Number(key)] = probability[Number(key)] * 100 / FPS.length;
     });

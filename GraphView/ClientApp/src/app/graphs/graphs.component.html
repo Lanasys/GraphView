@@ -10,8 +10,8 @@
           <p class="file-name">{{project.datasets[currentDataset].name}}</p>
         </div>
         <div class="row">
-          <h3>Name:</h3>
-          <p>Тут буде можливість змінити назву</p>
+          <h3>Name (editable):</h3>
+          <input type="text" name="" value="{{project.datasets[currentDataset].name}}" />
         </div>
         <div class="row mt-3">
           <h3>Application name:</h3>
@@ -22,8 +22,8 @@
           <p>{{project.datasets[currentDataset].runtime}}</p>
         </div>
         <div class="row">
-          <h3>Resolution:</h3>
-          <p>{{project.datasets[currentDataset].resolution}}</p>
+          <h3>Resolution (editable):</h3>
+          <input type="text" name="" value="{{project.datasets[currentDataset].resolution}}" />
         </div>
         <div class="row mt-3">
           <h3>CPU:</h3>
@@ -43,7 +43,7 @@
         </div>
         <div class="row">
           <h3>Power (avg/min/max), W:</h3>
-          <p>{{project.datasets[currentDataset].cpuPowerAvg}}/{{project.datasets[currentDataset].cpuPowerMin}}/{{project.datasets[currentDataset].cpuPowerMax}}</p>
+          <p>{{project.datasets[currentDataset].cpuPowerAvg.toFixed()}}/{{project.datasets[currentDataset].cpuPowerMin.toFixed()}}/{{project.datasets[currentDataset].cpuPowerMax.toFixed()}}</p>
         </div>
         <div class="row">
           <h3>TDP (min/max), W:</h3>
@@ -71,7 +71,7 @@
         </div>
         <div class="row">
           <h3>Power (avg/min/max), W:</h3>
-          <p>{{project.datasets[currentDataset].gpuPowerAvg}}/{{project.datasets[currentDataset].gpuPowerMin}}/{{project.datasets[currentDataset].gpuPowerMax}}</p>
+          <p>{{project.datasets[currentDataset].gpuPowerAvg.toFixed()}}/{{project.datasets[currentDataset].gpuPowerMin.toFixed()}}/{{project.datasets[currentDataset].gpuPowerMax.toFixed()}}</p>
         </div>
         <div class="row mt-3">
           <h3>Average FPS (API/Display):</h3>

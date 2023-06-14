@@ -41,6 +41,13 @@ export function ProcessData(data: any, fileName: string) {
     dataSet.gpuMemoryClock.push(Number(data[i][21]));
     dataSet.gpuUtilization.push(Number(data[i][22]));
     dataSet.gpuTemperature.push(Number(data[i][23]));
+    if (data[i][35] != "NA") {
+      dataSet.gpuPower.push(Number(data[i][35]));
+    } else if (data[i][36] != "NA") {
+      dataSet.gpuPower.push(Number(data[i][36]));
+    } else {
+      dataSet.gpuPower.push(0);
+    }
     //dataSet.gpuPower.push(data[i][24]); //треба брати із потрібного джерела
 
     dataSet.cpuClock.push(Number(data[i][37]));
