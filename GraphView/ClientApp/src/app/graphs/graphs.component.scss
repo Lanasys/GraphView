@@ -57,6 +57,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-top: 5px;
 
     input[type="radio"] {
       appearance: none;
@@ -133,6 +134,9 @@
 
     label {
       margin-left: 10px;
+      overflow: hidden;
+      width: calc(100% - 50px);
+
       @include H4-mob;
 
       @media (min-width: $main-bp) {
@@ -177,6 +181,12 @@
       @media (min-width: $main-bp) {
         @include H4;
       }
+    }
+
+    p.file-name {
+      word-wrap: anywhere;
+      width: 70%;
+      text-align: end;
     }
   }
 }
