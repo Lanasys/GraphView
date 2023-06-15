@@ -62,14 +62,10 @@ export class DataSet {
   batteryDrainRateMax: number;
   batteryDrainRateMin: number;
 
-  avgFPSAPI: number;
-  avgFPSDisplay: number;
-  modeFPSAPI: number;
-  modeFPSDisplay: number;
   statisticsAPI: number[];
   statisticsDisplay: number[];
 
-  public statisticsComparison(isApi: boolean): [number[], number, number] {
+  public statisticsComparison(isApi: boolean): number[] {
     let FPS: number[];
     if (isApi) {
       FPS = this.frameTimePresent.map((element: number) => Math.round(1000 / element));
@@ -112,9 +108,6 @@ export class DataSet {
         pc01 = Number(fps);
       }
     }
-    console.log(Count);
-    let res: number[] = [];
-    res.push(pc50, pc10, pc1, pc01);
 
     for (const key in Count) {
       if (Count.hasOwnProperty(key)) {
@@ -125,8 +118,10 @@ export class DataSet {
         }
       }
     }
-    
-    return [res, avgFPS, modeFPS];
+
+    let res: number[] = [];
+    res.push(Number(avgFPS.toFixed()), modeFPS, pc50, pc10, pc1, pc01);
+    return res;
   }
 
   public probabilityDensity(isApi: boolean, eps: number = 2): { [key: number]: number } {
@@ -148,37 +143,43 @@ export class DataSet {
     return probability;
   }
 
-  public FPS(isApi: boolean): { [key: number]: number } {
+  public FPS(isApi: boolean): number[][] {
     const FPS: number[] = isApi ? this.frameTimePresent.map((element: number) => Math.round(1000 / element)) : this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
 
-    const result: { [key: number]: number } = {};
+    const result: number[][] = [];
     if (isApi) {
       for (let i = 0; i < this.time.length; i++) {
-        result[this.time[i]] = FPS[i];
+        result[i] = [];
+        result[i][0] = this.time[i];
+        result[i][1] = FPS[i];
       }
     } else {
       for (let i = 0; i < this.timeDisplay.length; i++) {
-        result[this.timeDisplay[i]] = FPS[i];
+        result[i] = [];
+        result[i][0] = this.timeDisplay[i];
+        result[i][1] = FPS[i];
       }
     }
-
     return result;
   }
 
 
-  public frameTime(isApi: boolean) {
-    const result: { [key: number]: number } = {};
+  public frameTime(isApi: boolean): number[][] {
+    const result: number[][] = [];
 
     if (isApi) {
       for (let i = 0; i < this.time.length; i++) {
-        result[this.time[i]] = this.frameTimePresent[i];
+        result[i] = [];
+        result[i][0] = this.time[i];
+        result[i][1] = this.frameTimePresent[i];
       }
     } else {
       for (let i = 0; i < this.timeDisplay.length; i++) {
-        result[this.timeDisplay[i]] = this.frameTimeDisplayChange[i];
+        result[i] = [];
+        result[i][0] = this.timeDisplay[i];
+        result[i][1] = this.frameTimeDisplayChange[i];
       }
     }
-
     return result;
   }
 }

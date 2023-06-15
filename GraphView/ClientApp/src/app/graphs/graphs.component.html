@@ -11,7 +11,7 @@
         </div>
         <div class="row">
           <h3>Name (editable):</h3>
-          <input type="text" name="" maxlength="30" [(ngModel)]="datasetDetails.displayName" />
+          <input id="inputDisplayName" type="text" name="" maxlength="30" [(ngModel)]="datasetDetails.displayName" />
         </div>
         <div class="row mt-3">
           <h3>Application name:</h3>
@@ -23,7 +23,7 @@
         </div>
         <div class="row">
           <h3>Resolution (editable):</h3>
-          <input type="text" name="" maxlength="9" [(ngModel)]="datasetDetails.resolution" />
+          <input id="inputResolution" type="text" name="" maxlength="9" [(ngModel)]="datasetDetails.resolution" />
         </div>
         <div class="row mt-3">
           <h3>CPU:</h3>
@@ -75,27 +75,27 @@
         </div>
         <div class="row mt-3">
           <h3>Average FPS (API/Display):</h3>
-          <p>{{project.datasets[currentDataset].avgFPSAPI.toFixed()}}/{{project.datasets[currentDataset].avgFPSDisplay.toFixed()}}</p>
-        </div>
-        <div class="row">
-          <h3>Modal FPS (API/Display):</h3>
-          <p>{{project.datasets[currentDataset].modeFPSAPI}}/{{project.datasets[currentDataset].modeFPSDisplay}}</p>
-        </div>
-        <div class="row">
-          <h3>50%, FPS (API/Display):</h3>
           <p>{{project.datasets[currentDataset].statisticsAPI[0]}}/{{project.datasets[currentDataset].statisticsDisplay[0]}}</p>
         </div>
         <div class="row">
-          <h3>10%, FPS (API/Display):</h3>
+          <h3>Modal FPS (API/Display):</h3>
           <p>{{project.datasets[currentDataset].statisticsAPI[1]}}/{{project.datasets[currentDataset].statisticsDisplay[1]}}</p>
         </div>
         <div class="row">
-          <h3>1%, FPS (API/Display):</h3>
+          <h3>50%, FPS (API/Display):</h3>
           <p>{{project.datasets[currentDataset].statisticsAPI[2]}}/{{project.datasets[currentDataset].statisticsDisplay[2]}}</p>
         </div>
         <div class="row">
-          <h3>0.1%, FPS (API/Display):</h3>
+          <h3>10%, FPS (API/Display):</h3>
           <p>{{project.datasets[currentDataset].statisticsAPI[3]}}/{{project.datasets[currentDataset].statisticsDisplay[3]}}</p>
+        </div>
+        <div class="row">
+          <h3>1%, FPS (API/Display):</h3>
+          <p>{{project.datasets[currentDataset].statisticsAPI[4]}}/{{project.datasets[currentDataset].statisticsDisplay[4]}}</p>
+        </div>
+        <div class="row">
+          <h3>0.1%, FPS (API/Display):</h3>
+          <p>{{project.datasets[currentDataset].statisticsAPI[5]}}/{{project.datasets[currentDataset].statisticsDisplay[5]}}</p>
         </div>
         <div class="row mt-3">
           <h3>Battery drain rate (avg/min/max), W:</h3>
