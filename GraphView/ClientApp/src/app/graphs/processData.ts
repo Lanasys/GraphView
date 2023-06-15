@@ -20,7 +20,7 @@ export function ProcessData(data: any, fileName: string) {
   dataSet.gpuName = firstLine[1];
   dataSet.cpuName = firstLine[2];
 
-  let zeroTime = firstLine[12] * 1000;
+  let zeroTime = firstLine[12];
   let numbersOfCores = 0;
   for (let c = 0; c <= 63; c++) {
     if (data[42 + c] == "NA") {
@@ -30,11 +30,11 @@ export function ProcessData(data: any, fileName: string) {
   }
 
   for (let i = 1; i < data.length; i++) {
-    dataSet.time.push(Number(data[i][12] * 1000 - zeroTime));
+    dataSet.time.push(Number(data[i][12] - zeroTime));
     dataSet.frameTimePresent.push(Number(data[i][13]));
     if (Number(data[i][14]) != 0) {
       dataSet.frameTimeDisplayChange.push(Number(data[i][14]));
-      dataSet.timeDisplay.push(Number(data[i][12] * 1000 - zeroTime));
+      dataSet.timeDisplay.push(Number(data[i][12] - zeroTime));
     }
 
     dataSet.gpuClock.push(Number(data[i][20]));
@@ -91,8 +91,8 @@ export function ProcessData(data: any, fileName: string) {
   dataSet.batteryDrainRateMax = Math.max(...dataSet.batteryDrainRate);
   dataSet.batteryDrainRateMin = Math.min(...dataSet.batteryDrainRate);
 
-  [dataSet.statisticsAPI, dataSet.avgFPSAPI, dataSet.modeFPSAPI] = dataSet.statisticsComparison(true);
-  [dataSet.statisticsDisplay, dataSet.avgFPSDisplay, dataSet.modeFPSDisplay] = dataSet.statisticsComparison(false);
+  dataSet.statisticsAPI = dataSet.statisticsComparison(true);
+  dataSet.statisticsDisplay = dataSet.statisticsComparison(false);
 
   return dataSet;
 }

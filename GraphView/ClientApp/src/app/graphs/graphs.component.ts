@@ -179,7 +179,7 @@ export class GraphsComponent {
 
       let dataSet: {name: string, data: number[] }[] = [];
       for (let set of data) {
-        dataSet.push({ name: set.displayName, data: isApi ? set.statisticsAPI : set.statisticsDisplay })
+        dataSet.push({ name: set.displayName, data: set.statisticsComparison(isApi) })
       }
 
       this.dataOptions = {
@@ -203,9 +203,14 @@ export class GraphsComponent {
         },
         xaxis: {
           type: 'category',
-          categories: ['50%', '10%', '1%', '0.1%'],
+          categories: ['Average', 'Mode', '50% (Median)', '10%', '1%', '0.1%'],
           title: {
             text: this.project.name
+          }
+        },
+        yaxis: {
+          title: {
+            text: 'FPS'
           }
         },
         title: {
@@ -248,11 +253,17 @@ export class GraphsComponent {
         yaxis: {
           show: true,
           forceNiceScale: true,
-          decimalsInFloat: 0
+          decimalsInFloat: 4,
+          title: {
+            text: 'Probability, %'
+          }
         },
         xaxis: {
           type: 'numeric',
           tickAmount: 4,
+          title: {
+            text: 'FPS'
+          },
           categories: Object.keys(data[theLongestSetIndex].probabilityDensity(isApi, 2)).map(Number)
         },
         title: {
@@ -261,15 +272,10 @@ export class GraphsComponent {
       }
     }
     else if (this.chartType === 'FPS') {
-      let dataSet: {name: string, data: number[] }[] = [];
-      let setToGraph: number[];
+      let dataSet: {name: string, data: number[][] }[] = [];
 
       for (let set of data) {
-        setToGraph = Object.values(set.FPS(isApi));
-        dataSet.push({name: set.displayName, data: setToGraph });
-        if (setToGraph.length >= dataSet[theLongestSetIndex].data.length) {
-          theLongestSetIndex = data.indexOf(set);
-        }
+        dataSet.push({ name: set.displayName, data: set.FPS(isApi) });
       }
 
       this.dataOptions = {
@@ -307,9 +313,8 @@ export class GraphsComponent {
           tickAmount: 4,
           decimalsInFloat: 2,
           title: {
-            text: 'Time, ms'
-          },
-          categories: Object.keys(data[theLongestSetIndex].FPS(isApi)).map(Number).sort((a, b) => a - b)
+            text: 'Time, s'
+          }
         },
         title: {
           text: this.project.name
@@ -317,15 +322,10 @@ export class GraphsComponent {
       };
     }
     else if (this.chartType === 'frameTime') {
-      let dataSet: {name: string, data: number[] }[] = [];
-      let setToGraph: number[];
+      let dataSet: {name: string, data: number[][] }[] = [];
 
       for (let set of data) {
-        setToGraph = Object.values(set.frameTime(isApi));
-        dataSet.push({name: set.displayName, data: setToGraph });
-        if (setToGraph.length >= dataSet[theLongestSetIndex].data.length) {
-          theLongestSetIndex = data.indexOf(set);
-        }
+        dataSet.push({ name: set.displayName, data: set.frameTime(isApi) });
       }
 
       this.dataOptions = {
@@ -362,9 +362,8 @@ export class GraphsComponent {
           tickAmount: 4,
           decimalsInFloat: 2,
           title: {
-            text: 'Time, ms'
-          },
-          categories: Object.keys(data[theLongestSetIndex].frameTime(isApi)).map(Number).sort((a, b) => a - b)
+            text: 'Time, s'
+          }
         },
         title: {
           text: this.project.name

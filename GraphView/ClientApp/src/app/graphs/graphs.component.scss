@@ -190,7 +190,6 @@
     }
 
     input {
-      width: 300px;
       height: 17px;
       padding: 4px;
       background-color: transparent;
@@ -205,6 +204,14 @@
         outline: none;
         border: 1px solid $primary-color;
         background-color: $tertiary-color;
+      }
+
+      &#inputDisplayName {
+        width: 300px;
+      }
+
+      &#inputResolution {
+        width: 200px;
       }
 
       @media (min-width: $main-bp) {
