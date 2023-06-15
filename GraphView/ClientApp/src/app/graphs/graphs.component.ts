@@ -1,8 +1,8 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-import { ChartViewComponent } from '../chart-view/chart-view.component'
-import { Project, DataSet } from './models';
-import { ProcessData } from './processData';
-import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
+import {Component, ViewChild, ChangeDetectorRef} from '@angular/core';
+import {ChartViewComponent} from '../chart-view/chart-view.component'
+import {Project, DataSet} from './models';
+import {ProcessData} from './processData';
+import {NgxCsvParser, NgxCSVParserError} from 'ngx-csv-parser';
 
 import {
   ChartComponent,
@@ -36,59 +36,51 @@ export class GraphsComponent {
   errorMessage: string;
   dataSource: string;
   chartType: string;
+  additionalOptions: number[] = [];
   currentDataset: number = -1;
   selectedDatasets: number[] = [];
-  datasetDetails: { displayName: string, resolution: string} = {
+  datasetDetails: { displayName: string, resolution: string } = {
     displayName: '',
     resolution: ''
   };
-
-  selectDataset(index: number) {
-    this.currentDataset = index;
-    this.datasetDetails.displayName = this.project.datasets[index].displayName;
-    this.datasetDetails.resolution = this.project.datasets[index].resolution;
-  }
-
   dataSources: { [key: string]: string } = {
     'API': 'Time between calls',
     'Display': 'Time between showing frames on the display'
   }
-
-  chartTypes: { [key: string]: { name: string, subtypes: string[] | null } } = {
+  chartTypes: { [key: string]: { name: string, subtypes: string[] } } = {
     'frameTime': {
       name: 'Frametime',
-      subtypes: null
+      subtypes: []
     },
     'FPS': {
       name: 'FPS',
-      subtypes: null
+      subtypes: []
     },
     'probabilityDensity': {
       name: 'Probability density',
-      subtypes: null
+      subtypes: []
     },
     'statisticsComparison': {
       name: 'Statistics comparation',
-      subtypes: ['1', '2']
+      subtypes: ['CPU tempearture', 'CPU power', 'GPU temprature', 'GPU power']
     },
     'battery': {
       name: 'Battery info',
-      subtypes: ['1', '2', '3'],
+      subtypes: [],
     },
     'powerAndTemperature': {
       name: 'Power & Temperature',
-      subtypes: null
+      subtypes: []
     },
     'loadCpuAndGpu': {
       name: 'Load of CPU & GPU',
-      subtypes: null
+      subtypes: []
     },
     'clock': {
       name: 'CPU & GPU Clocks',
-      subtypes: null
+      subtypes: []
     }
   };
-
   chartTypesArray = Object.keys(this.chartTypes);
 
   constructor(private ngxCsvParser: NgxCsvParser, private changeDetectorRef: ChangeDetectorRef) {
@@ -98,25 +90,30 @@ export class GraphsComponent {
   csvRecords: any;
   header: boolean = false;
 
-
   fileChangeListener($event: any): void {
 
     const files = $event.srcElement.files;
     this.header = (this.header as unknown as string) === 'true' || this.header === true;
-    this.ngxCsvParser.parse(files[0], { header: this.header, delimiter: ',', encoding: 'utf8' })
+    this.ngxCsvParser.parse(files[0], {header: this.header, delimiter: ',', encoding: 'utf8'})
       .pipe().subscribe({
-        next: (result): void => {
-          let dataset: DataSet | null = ProcessData(result, files[0].name);
-          if (dataset != null) {
-            this.project.datasets.push(dataset);
-            console.log(this.project);
-          }
-
-        },
-        error: (error: NgxCSVParserError): void => {
-          console.log('Error', error);
+      next: (result): void => {
+        let dataset: DataSet | null = ProcessData(result, files[0].name);
+        if (dataset != null) {
+          this.project.datasets.push(dataset);
+          console.log(this.project);
         }
-      });
+
+      },
+      error: (error: NgxCSVParserError): void => {
+        console.log('Error', error);
+      }
+    });
+  }
+
+  selectDataset(index: number) {
+    this.currentDataset = index;
+    this.datasetDetails.displayName = this.project.datasets[index].displayName;
+    this.datasetDetails.resolution = this.project.datasets[index].resolution;
   }
 
   toggleSelected(event: any, set: DataSet) {
@@ -152,8 +149,30 @@ export class GraphsComponent {
   }
 
   saveDataSetDetails() {
-    this.project.datasets[this.currentDataset].displayName = this.datasetDetails.displayName;
-    this.project.datasets[this.currentDataset].resolution = this.datasetDetails.resolution;
+    if (this.datasetDetails.displayName.trim().length > 0) {
+      this.project.datasets[this.currentDataset].displayName = this.datasetDetails.displayName;
+    } else {
+      this.datasetDetails.displayName = this.project.datasets[this.currentDataset].displayName;
+    }
+    if (this.datasetDetails.resolution.trim().length > 0) {
+      this.project.datasets[this.currentDataset].resolution = this.datasetDetails.resolution;
+    } else {
+      this.datasetDetails.resolution = this.project.datasets[this.currentDataset].resolution;
+    }
+  }
+
+  updateAdditionalOptions(event: any, option: string) {
+    const checked = event.target.checked;
+    const optionIndex = this.chartTypes[this.chartType].subtypes.length !== 0 ? this.chartTypes[this.chartType].subtypes.indexOf(option) : -1;
+    if (checked && this.chartTypes[this.chartType].subtypes != null) {
+      this.additionalOptions.push(optionIndex);
+    } else {
+      const index = this.additionalOptions.indexOf(optionIndex);
+      if (index !== -1) {
+        this.additionalOptions.splice(index, 1);
+      }
+    }
+    this.additionalOptions.sort((a, b) => a - b);
   }
 
   buildChart() {
@@ -177,9 +196,18 @@ export class GraphsComponent {
 
     if (this.chartType === 'statisticsComparison') {
 
-      let dataSet: {name: string, data: number[] }[] = [];
+      let dataSet: { name: string, data: number[] }[] = [];
       for (let set of data) {
-        dataSet.push({ name: set.displayName, data: set.statisticsComparison(isApi) })
+        dataSet.push({name: set.displayName, data: set.statisticsComparison(isApi, this.additionalOptions)})
+      }
+
+      let categories = ['Average', 'Mode', '50% (Median)', '10%', '1%', '0.1%'];
+      if (this.additionalOptions.length > 0) {
+        for (let i of this.additionalOptions) {
+          if (this.chartTypes['statisticsComparison'].subtypes) {
+            categories.push(this.chartTypes['statisticsComparison'].subtypes[i]);
+          }
+        }
       }
 
       this.dataOptions = {
@@ -203,7 +231,7 @@ export class GraphsComponent {
         },
         xaxis: {
           type: 'category',
-          categories: ['Average', 'Mode', '50% (Median)', '10%', '1%', '0.1%'],
+          categories: categories,
           title: {
             text: this.project.name
           }
@@ -217,13 +245,12 @@ export class GraphsComponent {
           text: this.project.name
         }
       }
-    }
-    else if (this.chartType === 'probabilityDensity') {
+    } else if (this.chartType === 'probabilityDensity') {
       let dataSet: { name: string, data: number[] }[] = [];
       let setToGraph: number[];
       for (let set of data) {
         setToGraph = Object.values(set.probabilityDensity(isApi));
-        dataSet.push({ name: set.displayName, data: setToGraph })
+        dataSet.push({name: set.displayName, data: setToGraph})
         if (setToGraph.length >= dataSet[theLongestSetIndex].data.length) {
           theLongestSetIndex = data.indexOf(set);
         }
@@ -270,12 +297,11 @@ export class GraphsComponent {
           text: this.project.name
         }
       }
-    }
-    else if (this.chartType === 'FPS') {
-      let dataSet: {name: string, data: number[][] }[] = [];
+    } else if (this.chartType === 'FPS') {
+      let dataSet: { name: string, data: number[][] }[] = [];
 
       for (let set of data) {
-        dataSet.push({ name: set.displayName, data: set.FPS(isApi) });
+        dataSet.push({name: set.displayName, data: set.FPS(isApi)});
       }
 
       this.dataOptions = {
@@ -320,12 +346,11 @@ export class GraphsComponent {
           text: this.project.name
         },
       };
-    }
-    else if (this.chartType === 'frameTime') {
-      let dataSet: {name: string, data: number[][] }[] = [];
+    } else if (this.chartType === 'frameTime') {
+      let dataSet: { name: string, data: number[][] }[] = [];
 
       for (let set of data) {
-        dataSet.push({ name: set.displayName, data: set.frameTime(isApi) });
+        dataSet.push({name: set.displayName, data: set.frameTime(isApi)});
       }
 
       this.dataOptions = {
