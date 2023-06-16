@@ -179,6 +179,40 @@
           </div>
         </div>
       </div>
+      <div *ngIf="chartType === 'statisticsComparison'" class="col-12">
+        <div class="options-group">
+          <div class="options-group-title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseAbsolute" aria-expanded="false" aria-controls="collapseAbsolute">
+            <h3>Absolute values</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6l1.41-1.42Z" /></svg>
+          </div>
+          <div class="collapse" id="collapseAbsolute">
+            <div class="options-point">
+              <input type="radio" name="absolute" id="yes" [value]="true" [(ngModel)]="isAbsoluteStatistics" />
+              <label for="yes">Yes</label>
+            </div>
+            <div class="options-point">
+              <input type="radio" name="absolute" id="no" [value]="false" [(ngModel)]="isAbsoluteStatistics"/>
+              <label for="no">No</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="isAbsoluteStatistics && selectedDatasetsList.length > 0" class="col-12">
+        <div class="options-group">
+          <div class="options-group-title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseAbsoluteDataset" aria-expanded="false" aria-controls="collapseAbsoluteDataset">
+            <h3>Primary dataset</h3>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6l1.41-1.42Z" /></svg>
+          </div>
+          <div class="collapse" id="collapseAbsoluteDataset">
+            <ng-container *ngFor="let set of selectedDatasetsList">
+            <div class="options-point">
+              <input type="radio" name="primary" id="absolute{{selectedDatasetsList.indexOf(set)}}" [(ngModel)]="absolutePrimary" [value]="selectedDatasetsList.indexOf(set)" />
+              <label for="absolute{{selectedDatasetsList.indexOf(set)}}">{{set.displayName}}</label>
+            </div>
+              </ng-container>
+          </div>
+        </div>
+      </div>
       <div *ngIf="chartType && chartTypes[chartType].subtypes.length > 0" class="col-12">
         <div class="options-group">
           <div class="options-group-title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseGraphSubType" aria-expanded="false" aria-controls="collapseGraphSubType">

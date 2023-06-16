@@ -39,6 +39,9 @@ export class GraphsComponent {
   additionalOptions: number[] = [];
   currentDataset: number = -1;
   selectedDatasets: number[] = [];
+  isAbsoluteStatistics: boolean = false;
+  absolutePrimary: number;
+  selectedDatasetsList: DataSet[];
   datasetDetails: { displayName: string, resolution: string } = {
     displayName: '',
     resolution: ''
@@ -126,26 +129,31 @@ export class GraphsComponent {
         this.selectedDatasets.splice(index, 1);
       }
     }
+    this.selectedDatasetsList =  this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
 
     console.log(this.selectedDatasets);
   }
 
   selectAll() {
     this.selectedDatasets = Array.from(this.project.datasets.keys());
+    this.selectedDatasetsList =  this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
   }
 
   deselectAll() {
     this.selectedDatasets = [];
+    this.selectedDatasetsList =  this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
   }
 
   invertSelect() {
     this.selectedDatasets = Array.from(this.project.datasets.keys()).filter(index => !this.selectedDatasets.includes(index));
+    this.selectedDatasetsList =  this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
   }
 
   delete() {
     if (!this.selectedDatasets.length) return;
     this.project.datasets = this.project.datasets.filter((_, index) => !this.selectedDatasets.includes(index));
     this.selectedDatasets = [];
+    this.selectedDatasetsList =  this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
   }
 
   saveDataSetDetails() {
@@ -200,7 +208,13 @@ export class GraphsComponent {
       for (let set of data) {
         dataSet.push({name: set.displayName, data: set.statisticsComparison(isApi, this.additionalOptions)})
       }
-
+      if(this.isAbsoluteStatistics) {
+        for(let i = 0; i < dataSet.length; i++) {
+          for(let j = 0; j < dataSet[i].data.length; j++) {
+            dataSet[i].data[j] = Number((dataSet[i].data[j] * 100 / dataSet[this.absolutePrimary].data[j]).toFixed(2));
+          }
+        }
+      }
       let categories = ['Average', 'Mode', '50% (Median)', '10%', '1%', '0.1%'];
       if (this.additionalOptions.length > 0) {
         for (let i of this.additionalOptions) {
