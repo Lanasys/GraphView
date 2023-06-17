@@ -9,7 +9,7 @@ export function ProcessData(data: any, fileName: string) {
   let dataSet = new DataSet();
 
   dataSet.name = fileName;
-  dataSet.displayName = fileName;
+  dataSet.displayName = fileName.replace(".csv", "").replaceAll("_", " ").replaceAll("-", " ");
   dataSet.isDisplayed = true;
 
   let firstLine = data[1];

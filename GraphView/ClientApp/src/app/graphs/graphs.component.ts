@@ -1,8 +1,8 @@
-import {Component, ViewChild, ChangeDetectorRef} from '@angular/core';
-import {ChartViewComponent} from '../chart-view/chart-view.component'
-import {Project, DataSet} from './models';
-import {ProcessData} from './processData';
-import {NgxCsvParser, NgxCSVParserError} from 'ngx-csv-parser';
+import { Component, ViewChild, ChangeDetectorRef, ElementRef } from '@angular/core';
+import { ChartViewComponent } from '../chart-view/chart-view.component'
+import { Project, DataSet } from './models';
+import { ProcessData } from './processData';
+import { NgxCsvParser, NgxCSVParserError } from 'ngx-csv-parser';
 
 import {
   ChartComponent,
@@ -31,6 +31,8 @@ export type ChartOptions = {
 
 export class GraphsComponent {
   @ViewChild(ChartViewComponent) chartComponent!: ChartViewComponent;
+  @ViewChild('inputDataSet', { static: false }) inputDataSetRef: ElementRef<HTMLInputElement>;
+
   dataOptions: Partial<ChartOptions>;
   project: Project = new Project();
   errorMessage: string;
@@ -39,13 +41,14 @@ export class GraphsComponent {
   additionalOptions: number[] = [];
   currentDataset: number = -1;
   selectedDatasets: number[] = [];
-  isAbsoluteStatistics: boolean = false;
+  isAbsoluteStatistics: boolean = true;
   absolutePrimary: number;
   selectedDatasetsList: DataSet[];
   datasetDetails: { displayName: string, resolution: string } = {
     displayName: '',
     resolution: ''
   };
+
   dataSources: { [key: string]: string } = {
     'API': 'Time between calls',
     'Display': 'Time between showing frames on the display'
@@ -65,7 +68,7 @@ export class GraphsComponent {
     },
     'statisticsComparison': {
       name: 'Statistics comparation',
-      subtypes: ['CPU tempearture', 'CPU power', 'GPU temprature', 'GPU power']
+      subtypes: ['CPU temperature', 'CPU power', 'GPU temperature', 'GPU power']
     },
     'battery': {
       name: 'Battery info',
@@ -84,6 +87,7 @@ export class GraphsComponent {
       subtypes: []
     }
   };
+
   chartTypesArray = Object.keys(this.chartTypes);
 
   constructor(private ngxCsvParser: NgxCsvParser, private changeDetectorRef: ChangeDetectorRef) {
@@ -93,24 +97,28 @@ export class GraphsComponent {
   csvRecords: any;
   header: boolean = false;
 
+  triggerInputClick() {
+    this.inputDataSetRef.nativeElement.click();
+  }
+
   fileChangeListener($event: any): void {
 
     const files = $event.srcElement.files;
     this.header = (this.header as unknown as string) === 'true' || this.header === true;
-    this.ngxCsvParser.parse(files[0], {header: this.header, delimiter: ',', encoding: 'utf8'})
+    this.ngxCsvParser.parse(files[0], { header: this.header, delimiter: ',', encoding: 'utf8' })
       .pipe().subscribe({
-      next: (result): void => {
-        let dataset: DataSet | null = ProcessData(result, files[0].name);
-        if (dataset != null) {
-          this.project.datasets.push(dataset);
-          console.log(this.project);
-        }
+        next: (result): void => {
+          let dataset: DataSet | null = ProcessData(result, files[0].name);
+          if (dataset != null) {
+            this.project.datasets.push(dataset);
+            console.log(this.project);
+          }
 
-      },
-      error: (error: NgxCSVParserError): void => {
-        console.log('Error', error);
-      }
-    });
+        },
+        error: (error: NgxCSVParserError): void => {
+          console.log('Error', error);
+        }
+      });
   }
 
   selectDataset(index: number) {
@@ -129,31 +137,31 @@ export class GraphsComponent {
         this.selectedDatasets.splice(index, 1);
       }
     }
-    this.selectedDatasetsList =  this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
+    this.selectedDatasetsList = this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
 
     console.log(this.selectedDatasets);
   }
 
   selectAll() {
     this.selectedDatasets = Array.from(this.project.datasets.keys());
-    this.selectedDatasetsList =  this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
+    this.selectedDatasetsList = this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
   }
 
   deselectAll() {
     this.selectedDatasets = [];
-    this.selectedDatasetsList =  this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
+    this.selectedDatasetsList = this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
   }
 
   invertSelect() {
     this.selectedDatasets = Array.from(this.project.datasets.keys()).filter(index => !this.selectedDatasets.includes(index));
-    this.selectedDatasetsList =  this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
+    this.selectedDatasetsList = this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
   }
 
   delete() {
     if (!this.selectedDatasets.length) return;
     this.project.datasets = this.project.datasets.filter((_, index) => !this.selectedDatasets.includes(index));
     this.selectedDatasets = [];
-    this.selectedDatasetsList =  this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
+    this.selectedDatasetsList = this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
   }
 
   saveDataSetDetails() {
@@ -206,15 +214,9 @@ export class GraphsComponent {
 
       let dataSet: { name: string, data: number[] }[] = [];
       for (let set of data) {
-        dataSet.push({name: set.displayName, data: set.statisticsComparison(isApi, this.additionalOptions)})
+        dataSet.push({ name: set.displayName, data: set.statisticsComparison(isApi, this.additionalOptions) })
       }
-      if(this.isAbsoluteStatistics) {
-        for(let i = 0; i < dataSet.length; i++) {
-          for(let j = 0; j < dataSet[i].data.length; j++) {
-            dataSet[i].data[j] = Number((dataSet[i].data[j] * 100 / dataSet[this.absolutePrimary].data[j]).toFixed(2));
-          }
-        }
-      }
+
       let categories = ['Average', 'Mode', '50% (Median)', '10%', '1%', '0.1%'];
       if (this.additionalOptions.length > 0) {
         for (let i of this.additionalOptions) {
@@ -222,6 +224,26 @@ export class GraphsComponent {
             categories.push(this.chartTypes['statisticsComparison'].subtypes[i]);
           }
         }
+      }
+
+      if (!this.isAbsoluteStatistics) {
+        let tempData = dataSet[this.absolutePrimary].data.slice();
+        for (let i = 0; i < dataSet.length; i++) {
+          for (let j = 0; j < dataSet[i].data.length; j++) {
+            dataSet[i].data[j] = Number((dataSet[i].data[j] * 100 / tempData[j]).toFixed(2));
+          }
+        }
+      }
+
+      let yText = "FPS";
+      if (0 in this.additionalOptions || 2 in this.additionalOptions) {
+        yText += " / °C";
+      }
+      if (1 in this.additionalOptions || 3 in this.additionalOptions) {
+        yText += " / W";
+      }
+      if (!this.isAbsoluteStatistics) {
+        yText += ", %";
       }
 
       this.dataOptions = {
@@ -252,7 +274,7 @@ export class GraphsComponent {
         },
         yaxis: {
           title: {
-            text: 'FPS'
+            text: yText
           }
         },
         title: {
@@ -264,7 +286,7 @@ export class GraphsComponent {
       let setToGraph: number[];
       for (let set of data) {
         setToGraph = Object.values(set.probabilityDensity(isApi));
-        dataSet.push({name: set.displayName, data: setToGraph})
+        dataSet.push({ name: set.displayName, data: setToGraph })
         if (setToGraph.length >= dataSet[theLongestSetIndex].data.length) {
           theLongestSetIndex = data.indexOf(set);
         }
@@ -315,7 +337,7 @@ export class GraphsComponent {
       let dataSet: { name: string, data: number[][] }[] = [];
 
       for (let set of data) {
-        dataSet.push({name: set.displayName, data: set.FPS(isApi)});
+        dataSet.push({ name: set.displayName, data: set.FPS(isApi) });
       }
 
       this.dataOptions = {
@@ -364,7 +386,7 @@ export class GraphsComponent {
       let dataSet: { name: string, data: number[][] }[] = [];
 
       for (let set of data) {
-        dataSet.push({name: set.displayName, data: set.frameTime(isApi)});
+        dataSet.push({ name: set.displayName, data: set.frameTime(isApi) });
       }
 
       this.dataOptions = {

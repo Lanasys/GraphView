@@ -120,13 +120,15 @@
       </div>
       <div class="col-12">
         <div class="dataset-control">
+          <button class="btn" type="button" (click)="triggerInputClick()">Open file</button>
+          <input #inputDataSet class="d-none" type="file" name="name" (change)="fileChangeListener($event)" />
           <ng-container *ngIf="project.datasets.length > 0">
             <div *ngFor="let set of project.datasets" class="dataset">
               <input (change)="toggleSelected($event, set)" [checked]="selectedDatasets.includes(project.datasets.indexOf(set))" type="checkbox" id="dataset{{project.datasets.indexOf(set)}}" />
               <label>{{set.displayName}}</label>
-              <svg (click)="selectDataset(project.datasets.indexOf(set))"  data-bs-toggle="modal" data-bs-target="#dataset1" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M11 17h2v-6h-2v6Zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.713T12 7q-.425 0-.713.288T11 8q0 .425.288.713T12 9Zm0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Zm0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20Zm0-8Z" /></svg>
+              <svg (click)="selectDataset(project.datasets.indexOf(set))" data-bs-toggle="modal" data-bs-target="#dataset1" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M11 17h2v-6h-2v6Zm1-8q.425 0 .713-.288T13 8q0-.425-.288-.713T12 7q-.425 0-.713.288T11 8q0 .425.288.713T12 9Zm0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Zm0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20Zm0-8Z" /></svg>
             </div>
-            <div class="row">
+            <div id="dataset-control-buttons" class="row">
               <div class="col-6">
                 <button (click)="selectAll()" type="button" class="btn">Select all</button>
               </div>
@@ -141,7 +143,7 @@
               </div>
             </div>
           </ng-container>
-          <input type="file" name="name" (change)="fileChangeListener($event)" />
+
         </div>
       </div>
 
@@ -182,22 +184,22 @@
       <div *ngIf="chartType === 'statisticsComparison'" class="col-12">
         <div class="options-group">
           <div class="options-group-title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseAbsolute" aria-expanded="false" aria-controls="collapseAbsolute">
-            <h3>Absolute values</h3>
+            <h3>Graphic option:</h3>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M7.41 8.58L12 13.17l4.59-4.59L18 10l-6 6l-6-6l1.41-1.42Z" /></svg>
           </div>
           <div class="collapse" id="collapseAbsolute">
             <div class="options-point">
-              <input type="radio" name="absolute" id="yes" [value]="true" [(ngModel)]="isAbsoluteStatistics" />
-              <label for="yes">Yes</label>
+              <input type="radio" name="absolute" id="yes" [value]="true" [(ngModel)]="isAbsoluteStatistics" selected />
+              <label for="yes">Absolute values</label>
             </div>
             <div class="options-point">
               <input type="radio" name="absolute" id="no" [value]="false" [(ngModel)]="isAbsoluteStatistics"/>
-              <label for="no">No</label>
+              <label for="no">Relative values</label>
             </div>
           </div>
         </div>
       </div>
-      <div *ngIf="isAbsoluteStatistics && selectedDatasetsList.length > 0" class="col-12">
+      <div *ngIf="!isAbsoluteStatistics && selectedDatasetsList.length > 0" class="col-12">
         <div class="options-group">
           <div class="options-group-title collapsed" data-bs-toggle="collapse" data-bs-target="#collapseAbsoluteDataset" aria-expanded="false" aria-controls="collapseAbsoluteDataset">
             <h3>Primary dataset</h3>
