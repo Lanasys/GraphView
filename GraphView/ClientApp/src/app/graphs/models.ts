@@ -65,7 +65,7 @@ export class DataSet {
   statisticsAPI: number[];
   statisticsDisplay: number[];
 
-  public statisticsComparison(isApi: boolean): number[] {
+  public statisticsComparison(isApi: boolean, subtypes: number[] = []): number[] {
     let FPS: number[];
     if (isApi) {
       FPS = this.frameTimePresent.map((element: number) => Math.round(1000 / element));
@@ -120,7 +120,13 @@ export class DataSet {
     }
 
     let res: number[] = [];
+    const additional = [this.cpuTemperatureAvg, this.cpuPowerAvg, this.gpuTemperatureAvg, this.gpuPowerAvg]
     res.push(Number(avgFPS.toFixed()), modeFPS, pc50, pc10, pc1, pc01);
+    if (subtypes.length > 0) {
+      for (let i = 0; i < additional.length; i++) {
+        if (subtypes.includes(i)) res.push(additional[i]);
+      }
+    }
     return res;
   }
 

@@ -113,40 +113,36 @@
     align-items: center;
     cursor: pointer;
 
+    &:last-child {
+        margin-bottom: 0px;
+    }
+
     &:hover {
       box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     }
+  }
 
-    input[type="checkbox"] {
-      appearance: none;
-      border-radius: 10%;
-      width: 16px;
-      height: 16px;
-      border: 1px solid $primary-color;
-      transition: 0.1s all linear;
-      position: relative;
-      cursor: pointer;
+  label {
+    margin-left: 10px;
+    overflow: hidden;
+    width: calc(100% - 50px);
 
-      &:checked {
-        border: 8px solid $secondary-color;
+    @include H4-mob;
+
+    @media (min-width: $main-bp) {
+      @include H4;
+    }
+  }
+
+  svg {
+    margin-left: auto;
+  }
+
+  #dataset-control-buttons {
+      .col-6 {
+          margin-bottom: 0px;
+          margin-top: 10px;
       }
-    }
-
-    label {
-      margin-left: 10px;
-      overflow: hidden;
-      width: calc(100% - 50px);
-
-      @include H4-mob;
-
-      @media (min-width: $main-bp) {
-        @include H4;
-      }
-    }
-
-    svg {
-      margin-left: auto;
-    }
   }
 }
 
@@ -219,5 +215,20 @@
         @include H4;
       }
     }
+  }
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  border-radius: 10%;
+  width: 16px;
+  height: 16px;
+  border: 1px solid $primary-color;
+  transition: 0.1s all linear;
+  position: relative;
+  cursor: pointer;
+
+  &:checked {
+    border: 8px solid $secondary-color;
   }
 }
