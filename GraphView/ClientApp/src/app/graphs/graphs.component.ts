@@ -327,7 +327,7 @@ export class GraphsComponent {
           title: {
             text: 'FPS'
           },
-          categories: Object.keys(data[theLongestSetIndex].probabilityDensity(isApi, 2)).map(Number)
+          categories: Object.keys(data[theLongestSetIndex].probabilityDensity(isApi, 2)).map(Number).sort((a,b) => a - b)
         },
         title: {
           text: this.project.name

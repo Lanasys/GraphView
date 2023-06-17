@@ -1,3 +1,5 @@
+import { Filter } from '../graphs/filters'
+
 export class Project {
   name: string;
   datasets: DataSet[] = [];
@@ -151,7 +153,7 @@ export class DataSet {
 
   public FPS(isApi: boolean): number[][] {
     const FPS: number[] = isApi ? this.frameTimePresent.map((element: number) => Math.round(1000 / element)) : this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
-
+    
     const result: number[][] = [];
     if (isApi) {
       for (let i = 0; i < this.time.length; i++) {
