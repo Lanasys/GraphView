@@ -1,9 +1,9 @@
-import * as math from 'mathjs'
+import { calculateMedian } from "./processData";
 
 export class Filter {
   constructor() {
 
-  }  
+  }
 
   public static hampel(input: number[], windowSize: number, sigma: number = 3): number[] {
     const n = input.length;
@@ -12,16 +12,17 @@ export class Filter {
 
     for (let i = windowSize; i < n - windowSize; i++) {
       const slicedArray = input.slice(i - windowSize, i + windowSize);
-      const rMedian = math.median(slicedArray);
+      const rMedian = calculateMedian(slicedArray);
       slicedArray.forEach((val, index) => {
         slicedArray[index] = val - rMedian;
       });
-      const rMAD = k * math.median(math.abs(slicedArray));
-      if (math.abs(input[i] - rMedian) > sigma * rMAD) {
+      slicedArray.forEach((val, index) => {val = Math.abs(val)});
+      const rMAD = k * calculateMedian(slicedArray);
+      if (Math.abs(input[i] - rMedian) > sigma * rMAD) {
         inputCopy[i] = rMedian;
       }
     }
 
     return inputCopy;
-  }  
+  }
 }

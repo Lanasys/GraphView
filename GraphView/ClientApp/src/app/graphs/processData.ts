@@ -97,7 +97,7 @@ export function ProcessData(data: any, fileName: string) {
   return dataSet;
 }
 
-function calculateMedian(numbers: number[]): number {
+export function calculateMedian(numbers: number[]): number {
   const sortedNumbers = numbers.sort((a, b) => a - b);
 
   const length = sortedNumbers.length;
