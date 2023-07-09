@@ -151,9 +151,27 @@ export class DataSet {
     return probability;
   }
 
+  private windowSize(x: number[], time: number): number {
+    let sum = 0;
+    for (let i = 0; i < x.length; i++) {
+      if (sum < time / 2) {
+        sum += x[i];
+      }
+      else {
+        return i + 1;
+      }
+    }
+    return -1;
+  }
+
   public FPS(isApi: boolean): number[][] {
-    const FPS: number[] = isApi ? this.frameTimePresent.map((element: number) => Math.round(1000 / element)) : this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
-    
+    let FPS: number[] = isApi ? this.frameTimePresent.map((element: number) => Math.round(1000 / element)) : this.frameTimeDisplayChange.map((element: number) => Math.round(1000 / element));
+
+    console.log('FPS', FPS);
+    console.log("Window", this.windowSize(this.frameTimePresent, 250));
+
+    FPS = Filter.hampel(FPS, this.windowSize(this.frameTimePresent, 250));
+
     const result: number[][] = [];
     if (isApi) {
       for (let i = 0; i < this.time.length; i++) {

@@ -174,7 +174,7 @@
           <div class="collapse" id="collapseGraphType">
             <ng-container *ngFor="let key of chartTypesArray;">
               <div class="options-point">
-                <input type="radio" name="type" id="{{key}}" (change)="chartType = key" />
+                <input type="radio" name="type" id="{{key}}" [value]="key" [(ngModel)]="chartType" />
                 <label for="{{key}}">{{chartTypes[key].name}}</label>
               </div>
             </ng-container>

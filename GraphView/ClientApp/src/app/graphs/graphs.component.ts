@@ -202,7 +202,7 @@ export class GraphsComponent {
     }
 
     let isApi = this.dataSource === 'API';
-    const data: DataSet[] = this.project.datasets.filter((_, index) => this.selectedDatasets.includes(index));
+    const data: DataSet[] = this.selectedDatasetsList;
 
     if (data.length === 0) {
       return;
@@ -366,6 +366,8 @@ export class GraphsComponent {
           show: true,
           forceNiceScale: true,
           decimalsInFloat: 2,
+          max: 600,
+          min: 0,
           title: {
             text: 'FPS'
           },
